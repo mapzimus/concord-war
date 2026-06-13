@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "layers": [
+    {
+      "id": "city",
+      "group": "Territory",
+      "label": "City of Concord boundary",
+      "geojson": "city.geojson",
+      "source_url": "https://gis.concordnh.gov/arc1061/rest/services/CityGeneral/WaterSystemGIS/MapServer/63",
+      "style": {
+        "line": "#3a2f1d",
+        "lineWidth": 2
+      },
+      "visible_default": true,
+      "note": ""
+    },
+    {
+      "id": "river",
+      "group": "Territory",
+      "label": "Merrimack River (NHD flowlines)",
+      "geojson": "river.geojson",
+      "source_url": "https://hydro.nationalmap.gov/arcgis/rest/services/nhd/MapServer/6",
+      "style": {
+        "line": "#26527a",
+        "lineWidth": 2
+      },
+      "visible_default": true,
+      "note": ""
+    },
+    {
+      "id": "front_line",
+      "group": "Territory",
+      "label": "Merrimack front line",
+      "geojson": "front_line.geojson",
+      "source_url": "https://hydro.nationalmap.gov/arcgis/rest/services/nhd/MapServer/6",
+      "style": {
+        "line": "#463722",
+        "lineWidth": 3
+      },
+      "visible_default": true,
+      "note": ""
+    },
+    {
+      "id": "territory_east",
+      "group": "Territory",
+      "label": "East Concord",
+      "geojson": "territory_east.geojson",
+      "source_url": "derived: city polygon split by Merrimack centerline",
+      "style": {
+        "fill": "#bcc6a8",
+        "fillOpacity": 0.55
+      },
+      "visible_default": false,
+      "note": ""
+    },
+    {
+      "id": "territory_west",
+      "group": "Territory",
+      "label": "West Concord",
+      "geojson": "territory_west.geojson",
+      "source_url": "derived: city polygon split by Merrimack centerline",
+      "style": {
+        "fill": "#d7c597",
+        "fillOpacity": 0.55
+      },
+      "visible_default": false,
+      "note": ""
+    },
+    {
+      "id": "crossings",
+      "group": "Transport",
+      "label": "Merrimack River crossings",
+      "geojson": "crossings.geojson",
+      "source_url": "https://gis.concordnh.gov/arc1061/rest/services/CityGeneral/WaterSystemGIS/MapServer/44",
+      "style": {
+        "point": "#b22222",
+        "pointRadius": 6
+      },
+      "visible_default": false,
+      "note": ""
+    }
+  ]
+}

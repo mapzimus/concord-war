@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "chapters": [
+    {
+      "id": "intro",
+      "title": "The Two Banks",
+      "subtitle": "An alternate history of Concord, New Hampshire.",
+      "body": "The Merrimack River runs NW-SE through Concord, dividing it into West (downtown, hospital, prisons) and East (airport, NH National Guard, State Office Park). In an alternate-history civil war, every building is a resource for whichever bank it sits on.",
+      "stats": [],
+      "camera": {
+        "center": [
+          -71.538,
+          43.207
+        ],
+        "zoom": 11,
+        "pitch": 0,
+        "bearing": 0
+      },
+      "layers": [
+        "city",
+        "river",
+        "front_line"
+      ]
+    },
+    {
+      "id": "explorer",
+      "title": "Explore",
+      "subtitle": "Toggle layers freely.",
+      "body": "",
+      "stats": [],
+      "camera": {
+        "center": [
+          -71.538,
+          43.207
+        ],
+        "zoom": 11.3,
+        "pitch": 0,
+        "bearing": 0
+      },
+      "layers": [
+        "city",
+        "river",
+        "front_line",
+        "territory_east",
+        "territory_west",
+        "crossings"
+      ]
+    }
+  ]
+}
