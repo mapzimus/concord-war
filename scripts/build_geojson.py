@@ -82,7 +82,7 @@ def write_chapters(out: Path) -> None:
                 "id": "intro",
                 "title": "The Two Banks",
                 "subtitle": "An alternate history of Concord, New Hampshire.",
-                "body": "Interstate 93 cuts north-south through Concord, separating West (downtown, State House, hospital, prisons) from East (airport, NH National Guard, State Office Park, the Heights). In an alternate-history civil war the highway becomes the front line - both sides fight to seize and hold the exits and interchanges along it.",
+                "body": "The Merrimack River and Interstate 93 run roughly parallel through Concord. West of BOTH lies the body of the city - downtown, the State House, hospital, prisons. East of BOTH lies the fist - airport, NH National Guard, State Office Park, the Heights. The strip between the river and the highway is no-man's-land: Fort Eddy Rd, Everett Arena, NHTI, the airport approach. In an alternate-history civil war this strip becomes the battleground - both sides bleed into it, neither holds it for long.",
                 "stats": [],
                 "camera": {"center": CONCORD_CENTROID, "zoom": 11, "pitch": 0, "bearing": 0},
                 "layers": ["city", "river", "front_line"]
@@ -94,7 +94,7 @@ def write_chapters(out: Path) -> None:
                 "body": "",
                 "stats": [],
                 "camera": {"center": CONCORD_CENTROID, "zoom": 11.3, "pitch": 0, "bearing": 0},
-                "layers": ["city", "river", "front_line", "territory_east", "territory_west", "crossings"]
+                "layers": ["city", "river", "front_line", "territory_east", "territory_west", "territory_contested", "crossings"]
             }
         ]
     }
@@ -122,6 +122,10 @@ PASS_A_MANIFEST: list[LayerSpec] = [
               geojson="territory_west.geojson",
               source_url="derived: city polygon cut on the I-93 corridor",
               style={"fill": "#d7c597", "fillOpacity": 0.55}, visible_default=False),
+    LayerSpec(id="territory_contested", group="Territory", label="Contested zone (river ↔ I-93)",
+              geojson="territory_contested.geojson",
+              source_url="derived: city pieces between the Merrimack and I-93",
+              style={"fill": "#c4825a", "fillOpacity": 0.6, "line": "#6e2c00", "lineWidth": 1.5}, visible_default=False),
     LayerSpec(id="crossings", group="Transport", label="Merrimack River crossings",
               geojson="crossings.geojson",
               source_url="https://gis.concordnh.gov/arc1061/rest/services/CityGeneral/WaterSystemGIS/MapServer/44",

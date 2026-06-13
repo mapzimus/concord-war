@@ -5,7 +5,7 @@
       "id": "intro",
       "title": "The Two Banks",
       "subtitle": "An alternate history of Concord, New Hampshire.",
-      "body": "Interstate 93 cuts north-south through Concord, separating West (downtown, State House, hospital, prisons) from East (airport, NH National Guard, State Office Park, the Heights). In an alternate-history civil war the highway becomes the front line - both sides fight to seize and hold the exits and interchanges along it.",
+      "body": "The Merrimack River and Interstate 93 run roughly parallel through Concord. West of BOTH lies the body of the city - downtown, the State House, hospital, prisons. East of BOTH lies the fist - airport, NH National Guard, State Office Park, the Heights. The strip between the river and the highway is no-man's-land: Fort Eddy Rd, Everett Arena, NHTI, the airport approach. In an alternate-history civil war this strip becomes the battleground - both sides bleed into it, neither holds it for long.",
       "stats": [],
       "camera": {
         "center": [
@@ -43,6 +43,7 @@
         "front_line",
         "territory_east",
         "territory_west",
+        "territory_contested",
         "crossings"
       ]
     }

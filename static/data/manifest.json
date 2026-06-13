@@ -67,6 +67,21 @@
       "note": ""
     },
     {
+      "id": "territory_contested",
+      "group": "Territory",
+      "label": "Contested zone (river \u2194 I-93)",
+      "geojson": "territory_contested.geojson",
+      "source_url": "derived: city pieces between the Merrimack and I-93",
+      "style": {
+        "fill": "#c4825a",
+        "fillOpacity": 0.6,
+        "line": "#6e2c00",
+        "lineWidth": 1.5
+      },
+      "visible_default": false,
+      "note": ""
+    },
+    {
       "id": "crossings",
       "group": "Transport",
       "label": "Merrimack River crossings",
