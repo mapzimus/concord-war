@@ -13,11 +13,25 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^7.0.1",
+		"@sveltejs/adapter-static": "^3.0.10",
 		"@sveltejs/kit": "^2.63.0",
 		"@sveltejs/vite-plugin-svelte": "^7.1.2",
+		"@testing-library/jest-dom": "^6.9.1",
+		"@testing-library/svelte": "^5.3.1",
+		"jsdom": "^25.0.1",
 		"svelte": "^5.56.1",
 		"svelte-check": "^4.6.0",
 		"typescript": "^6.0.3",
-		"vite": "^8.0.16"
+		"vite": "^8.0.16",
+		"vitest": "^2.1.9"
+	},
+	"dependencies": {
+		"@deck.gl/core": "^9.3.4",
+		"@deck.gl/geo-layers": "^9.3.4",
+		"@deck.gl/layers": "^9.3.4",
+		"@deck.gl/mapbox": "^9.3.4",
+		"deck.gl": "^9.3.4",
+		"maplibre-gl": "^4.7.1",
+		"scrollama": "^3.2.0"
 	}
 }
