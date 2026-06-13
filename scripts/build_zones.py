@@ -24,8 +24,9 @@ import sys
 from pathlib import Path
 
 import geopandas as gpd
+import numpy as np
 import requests
-from shapely.geometry import LineString
+from shapely.geometry import LineString, MultiLineString
 from shapely.ops import linemerge, split, unary_union
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -86,6 +87,35 @@ def side_sign(line: LineString, pt) -> int:
     p2 = line.interpolate(min(d + 1.0, line.length))
     cross = (p2.x - p1.x) * (pt.y - p1.y) - (p2.y - p1.y) * (pt.x - p1.x)
     return 1 if cross >= 0 else -1
+
+
+def hatch_polygon(poly, spacing: float = 150.0, angle_deg: float = 45.0) -> list[LineString]:
+    """Generate parallel diagonal stripes across a polygon (clipped to it)."""
+    if poly is None or poly.is_empty:
+        return []
+    minx, miny, maxx, maxy = poly.bounds
+    pad = 1000.0
+    minx -= pad; miny -= pad; maxx += pad; maxy += pad
+    diag = float(np.hypot(maxx - minx, maxy - miny))
+    theta = np.radians(angle_deg)
+    cos_t, sin_t = np.cos(theta), np.sin(theta)
+    cx, cy = (minx + maxx) / 2, (miny + maxy) / 2
+
+    n = int(diag / spacing) + 1
+    out: list[LineString] = []
+    for i in range(-n, n + 1):
+        off = i * spacing
+        ox, oy = cx + off * (-sin_t), cy + off * cos_t
+        p1 = (ox - diag * cos_t, oy - diag * sin_t)
+        p2 = (ox + diag * cos_t, oy + diag * sin_t)
+        seg = LineString([p1, p2]).intersection(poly)
+        if seg.is_empty:
+            continue
+        if seg.geom_type == "LineString":
+            out.append(seg)
+        elif seg.geom_type == "MultiLineString":
+            out.extend(list(seg.geoms))
+    return out
 
 
 def main() -> int:
@@ -197,7 +227,22 @@ def main() -> int:
     write("territory_contested", contested, {"side": "Contested"})
     write("front_line", i93_main, {"name": "I-93 front line"})
 
-    print("\ndone — three zones (West / East / Contested) live on disk")
+    # Pre-compute diagonal hatching for the contested zone — campaign-map look.
+    if contested is not None and not contested.is_empty:
+        stripes = hatch_polygon(contested, spacing=150.0, angle_deg=45.0)
+        print(f"\n  hatch: {len(stripes)} stripe segments at 150 m / 45 deg")
+        if stripes:
+            stripes_gdf = gpd.GeoDataFrame(
+                {"id": list(range(len(stripes)))},
+                geometry=stripes, crs=CRS_LOCAL,
+            ).to_crs(4326)
+            out = STATIC / "territory_contested_stripes.geojson"
+            if out.exists():
+                out.unlink()
+            stripes_gdf.to_file(out, driver="GeoJSON")
+            print(f"  wrote {out.name}")
+
+    print("\ndone — three zones (West / East / Contested + hatch) live on disk")
     return 0
 
 

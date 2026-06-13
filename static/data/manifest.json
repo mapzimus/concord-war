@@ -74,12 +74,25 @@
       "source_url": "derived: city pieces between the Merrimack and I-93",
       "style": {
         "fill": "#c4825a",
-        "fillOpacity": 0.6,
+        "fillOpacity": 0.55,
         "line": "#6e2c00",
         "lineWidth": 1.5
       },
-      "visible_default": false,
+      "visible_default": true,
       "note": ""
+    },
+    {
+      "id": "territory_contested_stripes",
+      "group": "Territory",
+      "label": "Contested zone (hatch)",
+      "geojson": "territory_contested_stripes.geojson",
+      "source_url": "derived: 150 m / 45\u00b0 diagonal hatch over the contested zone",
+      "style": {
+        "line": "#9e3b2e",
+        "lineWidth": 1.2
+      },
+      "visible_default": true,
+      "note": "visual hatching for the contested zone \u2014 1860s campaign-map look"
     },
     {
       "id": "crossings",

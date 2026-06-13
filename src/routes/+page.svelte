@@ -4,7 +4,7 @@
   import Scrollytelling from '$lib/story/Scrollytelling.svelte';
   import LayerPanel from '$lib/explorer/LayerPanel.svelte';
   import { loadManifest, loadChapters, loadGeoJSON } from '$lib/data/manifest.js';
-  import { visibleLayers } from '$lib/data/stores.js';
+  import { visibleLayers, applyChapterLayers, setChapter } from '$lib/data/stores.js';
 
   /** @type {import('$lib/data/manifest.js').LayerSpec[]} */
   let specs = $state([]);
@@ -18,6 +18,13 @@
     specs = m.layers;
     const c = await loadChapters();
     chapters = c.chapters;
+    // Apply chapter 1's camera + layers on initial mount so the first paint
+    // matches the intended view (scrollama may not fire onStepEnter on load).
+    if (chapters.length > 0) {
+      camera = { ...chapters[0].camera };
+      setChapter(chapters[0].id);
+      applyChapterLayers(chapters[0].layers);
+    }
     // Lazy-load every layer's GeoJSON (Pass A only has 6 small files; fine to load all)
     const loaded = {};
     await Promise.all(specs.map(async (s) => {

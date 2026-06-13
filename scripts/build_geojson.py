@@ -85,7 +85,7 @@ def write_chapters(out: Path) -> None:
                 "body": "The Merrimack River and Interstate 93 run roughly parallel through Concord. West of BOTH lies the body of the city - downtown, the State House, hospital, prisons. East of BOTH lies the fist - airport, NH National Guard, State Office Park, the Heights. The strip between the river and the highway is no-man's-land: Fort Eddy Rd, Everett Arena, NHTI, the airport approach. In an alternate-history civil war this strip becomes the battleground - both sides bleed into it, neither holds it for long.",
                 "stats": [],
                 "camera": {"center": CONCORD_CENTROID, "zoom": 11, "pitch": 0, "bearing": 0},
-                "layers": ["city", "river", "front_line"]
+                "layers": ["city", "river", "front_line", "territory_contested", "territory_contested_stripes"]
             },
             {
                 "id": "explorer",
@@ -94,7 +94,7 @@ def write_chapters(out: Path) -> None:
                 "body": "",
                 "stats": [],
                 "camera": {"center": CONCORD_CENTROID, "zoom": 11.3, "pitch": 0, "bearing": 0},
-                "layers": ["city", "river", "front_line", "territory_east", "territory_west", "territory_contested", "crossings"]
+                "layers": ["city", "river", "front_line", "territory_east", "territory_west", "territory_contested", "territory_contested_stripes", "crossings"]
             }
         ]
     }
@@ -125,7 +125,12 @@ PASS_A_MANIFEST: list[LayerSpec] = [
     LayerSpec(id="territory_contested", group="Territory", label="Contested zone (river ↔ I-93)",
               geojson="territory_contested.geojson",
               source_url="derived: city pieces between the Merrimack and I-93",
-              style={"fill": "#c4825a", "fillOpacity": 0.6, "line": "#6e2c00", "lineWidth": 1.5}, visible_default=False),
+              style={"fill": "#c4825a", "fillOpacity": 0.55, "line": "#6e2c00", "lineWidth": 1.5}, visible_default=True),
+    LayerSpec(id="territory_contested_stripes", group="Territory", label="Contested zone (hatch)",
+              geojson="territory_contested_stripes.geojson",
+              source_url="derived: 150 m / 45° diagonal hatch over the contested zone",
+              style={"line": "#9e3b2e", "lineWidth": 1.2}, visible_default=True,
+              note="visual hatching for the contested zone — 1860s campaign-map look"),
     LayerSpec(id="crossings", group="Transport", label="Merrimack River crossings",
               geojson="crossings.geojson",
               source_url="https://gis.concordnh.gov/arc1061/rest/services/CityGeneral/WaterSystemGIS/MapServer/44",

@@ -19,7 +19,9 @@
       "layers": [
         "city",
         "river",
-        "front_line"
+        "front_line",
+        "territory_contested",
+        "territory_contested_stripes"
       ]
     },
     {
@@ -44,6 +46,7 @@
         "territory_east",
         "territory_west",
         "territory_contested",
+        "territory_contested_stripes",
         "crossings"
       ]
     }
