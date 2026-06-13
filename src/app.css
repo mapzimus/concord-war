@@ -1,0 +1,39 @@
+:root {
+  /* Carried from the poster's palette */
+  --parchment: #e7dcc0;
+  --parchment-dark: #d8c8a4;
+  --ink: #3a2f1d;
+  --west: #d7c597;
+  --east: #bcc6a8;
+  --water: #9fb4c2;
+  --redzone: #9e3b2e;
+  --front: #463722;
+  --blitz: #6e2c00;
+
+  --font-display: Georgia, "Hoefler Text", "Times New Roman", serif;
+  --font-body: "Source Sans Pro", "Inter", system-ui, sans-serif;
+
+  color-scheme: light;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--parchment);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  margin: 0 0 0.4em;
+}
+
+a {
+  color: var(--blitz);
+}
+
+* { box-sizing: border-box; }
