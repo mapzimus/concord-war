@@ -1,0 +1,32 @@
+{
+  "version": 8,
+  "name": "concord-war-sepia",
+  "glyphs": "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
+  "sources": {
+    "osm": {
+      "type": "raster",
+      "tiles": ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+      "tileSize": 256,
+      "attribution": "© OpenStreetMap"
+    }
+  },
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": { "background-color": "#e7dcc0" }
+    },
+    {
+      "id": "osm-raster",
+      "type": "raster",
+      "source": "osm",
+      "paint": {
+        "raster-saturation": -0.9,
+        "raster-contrast": 0.05,
+        "raster-brightness-min": 0.25,
+        "raster-brightness-max": 0.95,
+        "raster-opacity": 0.55
+      }
+    }
+  ]
+}
