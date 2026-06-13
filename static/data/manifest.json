@@ -30,9 +30,9 @@
     {
       "id": "front_line",
       "group": "Territory",
-      "label": "Merrimack front line",
+      "label": "I-93 corridor (front line)",
       "geojson": "front_line.geojson",
-      "source_url": "https://hydro.nationalmap.gov/arcgis/rest/services/nhd/MapServer/6",
+      "source_url": "OpenStreetMap: way[ref=\"I 93\"] within Concord bbox (recut_on_i93.py)",
       "style": {
         "line": "#463722",
         "lineWidth": 3
@@ -45,7 +45,7 @@
       "group": "Territory",
       "label": "East Concord",
       "geojson": "territory_east.geojson",
-      "source_url": "derived: city polygon split by Merrimack centerline",
+      "source_url": "derived: city polygon cut on the I-93 corridor",
       "style": {
         "fill": "#bcc6a8",
         "fillOpacity": 0.55
@@ -58,7 +58,7 @@
       "group": "Territory",
       "label": "West Concord",
       "geojson": "territory_west.geojson",
-      "source_url": "derived: city polygon split by Merrimack centerline",
+      "source_url": "derived: city polygon cut on the I-93 corridor",
       "style": {
         "fill": "#d7c597",
         "fillOpacity": 0.55
