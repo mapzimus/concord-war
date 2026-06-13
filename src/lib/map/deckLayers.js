@@ -14,6 +14,12 @@ export function buildDeckLayers(visible, geo, specs) {
     if (!visible.has(spec.id)) continue;
     const data = geo[spec.id];
     if (!data) continue;
+    // Point fill takes precedence over polygon fill so points always render
+    // visibly even when a polygon-style isn't set.
+    const pointFill = spec.style.point ? hexToRgba(spec.style.point, 1) : null;
+    const polyFill = spec.style.fill ? hexToRgba(spec.style.fill, spec.style.fillOpacity ?? 0.5) : null;
+    const lineColor = spec.style.line ? hexToRgba(spec.style.line) : [60, 47, 29, 255];
+
     out.push(
       new GeoJsonLayer({
         id: spec.id,
@@ -22,8 +28,8 @@ export function buildDeckLayers(visible, geo, specs) {
         filled: true,
         pickable: true,
         lineWidthMinPixels: spec.style.lineWidth ?? 1,
-        getLineColor: spec.style.line ? hexToRgba(spec.style.line) : [60, 47, 29, 255],
-        getFillColor: spec.style.fill ? hexToRgba(spec.style.fill, spec.style.fillOpacity ?? 0.5) : [0, 0, 0, 0],
+        getLineColor: lineColor,
+        getFillColor: pointFill || polyFill || [0, 0, 0, 0],
         getPointRadius: spec.style.pointRadius ?? 6,
         pointRadiusUnits: 'pixels'
       })

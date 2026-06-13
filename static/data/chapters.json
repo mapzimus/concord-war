@@ -21,7 +21,9 @@
         "river",
         "front_line",
         "territory_contested",
-        "territory_contested_stripes"
+        "territory_contested_stripes",
+        "crossings",
+        "flashpoints"
       ]
     },
     {
@@ -47,7 +49,24 @@
         "territory_west",
         "territory_contested",
         "territory_contested_stripes",
-        "crossings"
+        "crossings",
+        "flashpoints",
+        "viewshed_east",
+        "exposed_west",
+        "himars",
+        "blackhawks",
+        "resources_military",
+        "resources_police",
+        "resources_manpower",
+        "resources_medical",
+        "resources_govt",
+        "resources_command",
+        "resources_water",
+        "garvins_falls",
+        "resources_energy",
+        "resources_logistics",
+        "resources_fortress",
+        "resources_transport"
       ]
     }
   ]

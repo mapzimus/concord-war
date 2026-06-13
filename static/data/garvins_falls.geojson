@@ -1,0 +1,21 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -71.515,
+          43.135
+        ]
+      },
+      "properties": {
+        "name": "Garvins Falls hydro (12.4 MW)",
+        "side": "Contested",
+        "category": "power_gen",
+        "note": "Mid-river hydroelectric on the Bow/Concord line; owner Hull Street Energy. The contested generator \u2014 the river itself."
+      }
+    }
+  ]
+}

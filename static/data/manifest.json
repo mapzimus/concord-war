@@ -106,6 +106,261 @@
       },
       "visible_default": false,
       "note": ""
+    },
+    {
+      "id": "viewshed_east",
+      "group": "Tactical",
+      "label": "East viewshed (3DEP DEM)",
+      "geojson": "viewshed_east.geojson",
+      "source_url": "USGS 3DEP DEM + gdal.ViewshedGenerate from airport / armory / Oak Hill",
+      "style": {
+        "fill": "#7d6608",
+        "fillOpacity": 0.2,
+        "line": "#7d6608",
+        "lineWidth": 0.5
+      },
+      "visible_default": false,
+      "note": "Everything East's batteries can SEE \u2014 i.e. can shell"
+    },
+    {
+      "id": "exposed_west",
+      "group": "Tactical",
+      "label": "Beaten zone (West under fire)",
+      "geojson": "exposed_west.geojson",
+      "source_url": "viewshed_east \u2229 territory_west \u2014 36.4% of the west bank",
+      "style": {
+        "fill": "#9e3b2e",
+        "fillOpacity": 0.35,
+        "line": "#9e3b2e",
+        "lineWidth": 0.5
+      },
+      "visible_default": false,
+      "note": "The west-bank ground actually exposed to East fire"
+    },
+    {
+      "id": "flashpoints",
+      "group": "Tactical",
+      "label": "Contested flashpoints",
+      "geojson": "flashpoints.geojson",
+      "source_url": "curated points: Hannah Dustin, Exit 17, Sewalls Falls, Exit 16, Fort Eddy plaza, NHTI, Bow Jct",
+      "style": {
+        "point": "#7b241c",
+        "pointRadius": 9,
+        "line": "#3a2f1d",
+        "lineWidth": 1.5
+      },
+      "visible_default": false,
+      "note": ""
+    },
+    {
+      "id": "himars",
+      "group": "Military",
+      "label": "HIMARS launchers (3-197 FA)",
+      "geojson": "himars.geojson",
+      "source_url": "NH Army National Guard, 3rd Battalion 197th Field Artillery (M142 HIMARS)",
+      "style": {
+        "point": "#c0392b",
+        "pointRadius": 11,
+        "line": "#3a2f1d",
+        "lineWidth": 1.5
+      },
+      "visible_default": false,
+      "note": "Strategic rocket artillery \u2014 East's range advantage"
+    },
+    {
+      "id": "blackhawks",
+      "group": "Military",
+      "label": "Black Hawks (AASF / 151st Aviation)",
+      "geojson": "blackhawks.geojson",
+      "source_url": "Army Aviation Support Facility, Concord Municipal Airport",
+      "style": {
+        "point": "#1a5276",
+        "pointRadius": 11,
+        "line": "#3a2f1d",
+        "lineWidth": 1.5
+      },
+      "visible_default": false,
+      "note": "UH-60 air mobility \u2014 East can bypass the bridges"
+    },
+    {
+      "id": "resources_military",
+      "group": "Military",
+      "label": "NHARNG sites",
+      "geojson": "resources_military.geojson",
+      "source_url": "poster: 07_resources.py (Census geocoded + bank-validated)",
+      "style": {
+        "point": "#7b241c",
+        "pointRadius": 8,
+        "line": "#3a2f1d",
+        "lineWidth": 1.2
+      },
+      "visible_default": false,
+      "note": ""
+    },
+    {
+      "id": "resources_police",
+      "group": "Forces",
+      "label": "Police HQ + BearCat (West)",
+      "geojson": "resources_police.geojson",
+      "source_url": "poster: 07_resources.py",
+      "style": {
+        "point": "#1a5276",
+        "pointRadius": 8,
+        "line": "#3a2f1d",
+        "lineWidth": 1.2
+      },
+      "visible_default": false,
+      "note": ""
+    },
+    {
+      "id": "resources_manpower",
+      "group": "Forces",
+      "label": "State prisons (1,408+ inmates)",
+      "geojson": "resources_manpower.geojson",
+      "source_url": "poster: 07_resources.py",
+      "style": {
+        "point": "#4a3520",
+        "pointRadius": 8,
+        "line": "#3a2f1d",
+        "lineWidth": 1.2
+      },
+      "visible_default": false,
+      "note": ""
+    },
+    {
+      "id": "resources_medical",
+      "group": "Medical",
+      "label": "Hospitals (Level II + psych)",
+      "geojson": "resources_medical.geojson",
+      "source_url": "poster: 07_resources.py",
+      "style": {
+        "point": "#922b21",
+        "pointRadius": 9,
+        "line": "#3a2f1d",
+        "lineWidth": 1.2
+      },
+      "visible_default": false,
+      "note": ""
+    },
+    {
+      "id": "resources_govt",
+      "group": "Government",
+      "label": "State House",
+      "geojson": "resources_govt.geojson",
+      "source_url": "poster: 07_resources.py",
+      "style": {
+        "point": "#5b3a1a",
+        "pointRadius": 10,
+        "line": "#3a2f1d",
+        "lineWidth": 1.5
+      },
+      "visible_default": false,
+      "note": ""
+    },
+    {
+      "id": "resources_command",
+      "group": "Government",
+      "label": "Supreme Court / DOS HQ / data ctr",
+      "geojson": "resources_command.geojson",
+      "source_url": "poster: 07_resources.py",
+      "style": {
+        "point": "#7d6608",
+        "pointRadius": 8,
+        "line": "#3a2f1d",
+        "lineWidth": 1.2
+      },
+      "visible_default": false,
+      "note": ""
+    },
+    {
+      "id": "resources_water",
+      "group": "Water",
+      "label": "Drinking water + WWTPs",
+      "geojson": "resources_water.geojson",
+      "source_url": "poster: 07_resources.py (Hutchins WTP, Hall St WWTP, Penacook Lake)",
+      "style": {
+        "point": "#1f618d",
+        "pointRadius": 9,
+        "line": "#3a2f1d",
+        "lineWidth": 1.2
+      },
+      "visible_default": false,
+      "note": ""
+    },
+    {
+      "id": "garvins_falls",
+      "group": "Power",
+      "label": "Garvins Falls hydro (12.4 MW)",
+      "geojson": "garvins_falls.geojson",
+      "source_url": "Hull Street Energy / FERC; mid-river on the Bow line",
+      "style": {
+        "point": "#f1c40f",
+        "pointRadius": 11,
+        "line": "#3a2f1d",
+        "lineWidth": 1.5
+      },
+      "visible_default": false,
+      "note": "The contested generator \u2014 neither bank can claim it"
+    },
+    {
+      "id": "resources_energy",
+      "group": "Power",
+      "label": "Solar + propane + transfer station",
+      "geojson": "resources_energy.geojson",
+      "source_url": "poster: 07_resources.py (Rymes Propane, Old Turnpike solar 6.7 MW)",
+      "style": {
+        "point": "#9c640c",
+        "pointRadius": 8,
+        "line": "#3a2f1d",
+        "lineWidth": 1.2
+      },
+      "visible_default": false,
+      "note": ""
+    },
+    {
+      "id": "resources_logistics",
+      "group": "Logistics",
+      "label": "Loudon Rd big-box belt",
+      "geojson": "resources_logistics.geojson",
+      "source_url": "poster: 07_resources.py (Walmart/Sam's/Target/Market Basket)",
+      "style": {
+        "point": "#7d6608",
+        "pointRadius": 8,
+        "line": "#3a2f1d",
+        "lineWidth": 1.2
+      },
+      "visible_default": false,
+      "note": ""
+    },
+    {
+      "id": "resources_fortress",
+      "group": "Logistics",
+      "label": "Steeplegate Mall (staging)",
+      "geojson": "resources_fortress.geojson",
+      "source_url": "poster: 07_resources.py",
+      "style": {
+        "point": "#6e2c00",
+        "pointRadius": 9,
+        "line": "#3a2f1d",
+        "lineWidth": 1.2
+      },
+      "visible_default": false,
+      "note": ""
+    },
+    {
+      "id": "resources_transport",
+      "group": "Logistics",
+      "label": "Concord Municipal Airport",
+      "geojson": "resources_transport.geojson",
+      "source_url": "poster: 07_resources.py",
+      "style": {
+        "point": "#196f3d",
+        "pointRadius": 9,
+        "line": "#3a2f1d",
+        "lineWidth": 1.2
+      },
+      "visible_default": false,
+      "note": ""
     }
   ]
 }

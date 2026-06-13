@@ -63,6 +63,71 @@ def export_split_territories(gpkg: Path, out_dir: Path) -> tuple[Path, Path]:
     return p_east, p_west
 
 
+def export_resources_by_category(gpkg: Path, out_dir: Path) -> dict[str, int]:
+    """Split the poster's 18 resources by `category` into per-category GeoJSONs."""
+    out_dir.mkdir(parents=True, exist_ok=True)
+    gdf = gpd.read_file(gpkg, layer="resources").to_crs(4326)
+    counts: dict[str, int] = {}
+    for cat in sorted(gdf["category"].unique()):
+        sub = gdf[gdf["category"] == cat]
+        out = out_dir / f"resources_{cat}.geojson"
+        if out.exists():
+            out.unlink()
+        sub.to_file(out, driver="GeoJSON")
+        counts[cat] = len(sub)
+    return counts
+
+
+def write_extra_points(out_dir: Path) -> None:
+    """Author the research-only assets that don't live in the poster GeoPackage."""
+    out_dir.mkdir(parents=True, exist_ok=True)
+    extras = {
+        "himars": {
+            "label": "HIMARS launchers (3-197 FA)",
+            "features": [{
+                "type": "Feature",
+                "geometry": {"type": "Point", "coordinates": [-71.5124, 43.2103]},
+                "properties": {
+                    "name": "HIMARS launchers (3-197 FA)",
+                    "side": "E", "category": "military",
+                    "note": "M142 HIMARS strategic rocket artillery at the NH Army National Guard State Military Reservation (1 Minuteman Way)."
+                }
+            }]
+        },
+        "blackhawks": {
+            "label": "Black Hawks (151st Aviation / AASF)",
+            "features": [{
+                "type": "Feature",
+                "geometry": {"type": "Point", "coordinates": [-71.5023, 43.2027]},
+                "properties": {
+                    "name": "Black Hawks (151st Aviation / AASF)",
+                    "side": "E", "category": "military_air",
+                    "note": "UH-60 Black Hawks at the Army Aviation Support Facility, Concord Municipal Airport. Includes 238th MEDEVAC."
+                }
+            }]
+        },
+        "garvins_falls": {
+            "label": "Garvins Falls hydroelectric (12.4 MW)",
+            "features": [{
+                "type": "Feature",
+                "geometry": {"type": "Point", "coordinates": [-71.515, 43.135]},
+                "properties": {
+                    "name": "Garvins Falls hydro (12.4 MW)",
+                    "side": "Contested", "category": "power_gen",
+                    "note": "Mid-river hydroelectric on the Bow/Concord line; owner Hull Street Energy. The contested generator — the river itself."
+                }
+            }]
+        }
+    }
+    for key, payload in extras.items():
+        out = out_dir / f"{key}.geojson"
+        if out.exists():
+            out.unlink()
+        out.write_text(
+            json.dumps({"type": "FeatureCollection", "features": payload["features"]}, indent=2),
+            encoding="utf-8")
+
+
 def write_manifest(layers: Iterable[LayerSpec], out: Path) -> None:
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps({"version": 1, "layers": [asdict(l) for l in layers]}, indent=2),
@@ -85,7 +150,11 @@ def write_chapters(out: Path) -> None:
                 "body": "The Merrimack River and Interstate 93 run roughly parallel through Concord. West of BOTH lies the body of the city - downtown, the State House, hospital, prisons. East of BOTH lies the fist - airport, NH National Guard, State Office Park, the Heights. The strip between the river and the highway is no-man's-land: Fort Eddy Rd, Everett Arena, NHTI, the airport approach. In an alternate-history civil war this strip becomes the battleground - both sides bleed into it, neither holds it for long.",
                 "stats": [],
                 "camera": {"center": CONCORD_CENTROID, "zoom": 11, "pitch": 0, "bearing": 0},
-                "layers": ["city", "river", "front_line", "territory_contested", "territory_contested_stripes"]
+                "layers": [
+                    "city", "river", "front_line",
+                    "territory_contested", "territory_contested_stripes",
+                    "crossings", "flashpoints"
+                ]
             },
             {
                 "id": "explorer",
@@ -94,7 +163,18 @@ def write_chapters(out: Path) -> None:
                 "body": "",
                 "stats": [],
                 "camera": {"center": CONCORD_CENTROID, "zoom": 11.3, "pitch": 0, "bearing": 0},
-                "layers": ["city", "river", "front_line", "territory_east", "territory_west", "territory_contested", "territory_contested_stripes", "crossings"]
+                "layers": [
+                    "city", "river", "front_line",
+                    "territory_east", "territory_west",
+                    "territory_contested", "territory_contested_stripes",
+                    "crossings", "flashpoints",
+                    "viewshed_east", "exposed_west",
+                    "himars", "blackhawks",
+                    "resources_military", "resources_police", "resources_manpower",
+                    "resources_medical", "resources_govt", "resources_command",
+                    "resources_water", "garvins_falls", "resources_energy",
+                    "resources_logistics", "resources_fortress", "resources_transport"
+                ]
             }
         ]
     }
@@ -135,6 +215,112 @@ PASS_A_MANIFEST: list[LayerSpec] = [
               geojson="crossings.geojson",
               source_url="https://gis.concordnh.gov/arc1061/rest/services/CityGeneral/WaterSystemGIS/MapServer/44",
               style={"point": "#b22222", "pointRadius": 6}, visible_default=False),
+
+    # === Tactical overlays (poster data) ===
+    LayerSpec(id="viewshed_east", group="Tactical", label="East viewshed (3DEP DEM)",
+              geojson="viewshed_east.geojson",
+              source_url="USGS 3DEP DEM + gdal.ViewshedGenerate from airport / armory / Oak Hill",
+              style={"fill": "#7d6608", "fillOpacity": 0.20, "line": "#7d6608", "lineWidth": 0.5},
+              visible_default=False,
+              note="Everything East's batteries can SEE — i.e. can shell"),
+    LayerSpec(id="exposed_west", group="Tactical", label="Beaten zone (West under fire)",
+              geojson="exposed_west.geojson",
+              source_url="viewshed_east ∩ territory_west — 36.4% of the west bank",
+              style={"fill": "#9e3b2e", "fillOpacity": 0.35, "line": "#9e3b2e", "lineWidth": 0.5},
+              visible_default=False,
+              note="The west-bank ground actually exposed to East fire"),
+    LayerSpec(id="flashpoints", group="Tactical", label="Contested flashpoints",
+              geojson="flashpoints.geojson",
+              source_url="curated points: Hannah Dustin, Exit 17, Sewalls Falls, Exit 16, Fort Eddy plaza, NHTI, Bow Jct",
+              style={"point": "#7b241c", "pointRadius": 9, "line": "#3a2f1d", "lineWidth": 1.5},
+              visible_default=False),
+
+    # === Military (named installations + research-only assets) ===
+    LayerSpec(id="himars", group="Military", label="HIMARS launchers (3-197 FA)",
+              geojson="himars.geojson",
+              source_url="NH Army National Guard, 3rd Battalion 197th Field Artillery (M142 HIMARS)",
+              style={"point": "#c0392b", "pointRadius": 11, "line": "#3a2f1d", "lineWidth": 1.5},
+              visible_default=False,
+              note="Strategic rocket artillery — East's range advantage"),
+    LayerSpec(id="blackhawks", group="Military", label="Black Hawks (AASF / 151st Aviation)",
+              geojson="blackhawks.geojson",
+              source_url="Army Aviation Support Facility, Concord Municipal Airport",
+              style={"point": "#1a5276", "pointRadius": 11, "line": "#3a2f1d", "lineWidth": 1.5},
+              visible_default=False,
+              note="UH-60 air mobility — East can bypass the bridges"),
+    LayerSpec(id="resources_military", group="Military", label="NHARNG sites",
+              geojson="resources_military.geojson",
+              source_url="poster: 07_resources.py (Census geocoded + bank-validated)",
+              style={"point": "#7b241c", "pointRadius": 8, "line": "#3a2f1d", "lineWidth": 1.2},
+              visible_default=False),
+
+    # === Police / corrections ===
+    LayerSpec(id="resources_police", group="Forces", label="Police HQ + BearCat (West)",
+              geojson="resources_police.geojson",
+              source_url="poster: 07_resources.py",
+              style={"point": "#1a5276", "pointRadius": 8, "line": "#3a2f1d", "lineWidth": 1.2},
+              visible_default=False),
+    LayerSpec(id="resources_manpower", group="Forces", label="State prisons (1,408+ inmates)",
+              geojson="resources_manpower.geojson",
+              source_url="poster: 07_resources.py",
+              style={"point": "#4a3520", "pointRadius": 8, "line": "#3a2f1d", "lineWidth": 1.2},
+              visible_default=False),
+
+    # === Medical ===
+    LayerSpec(id="resources_medical", group="Medical", label="Hospitals (Level II + psych)",
+              geojson="resources_medical.geojson",
+              source_url="poster: 07_resources.py",
+              style={"point": "#922b21", "pointRadius": 9, "line": "#3a2f1d", "lineWidth": 1.2},
+              visible_default=False),
+
+    # === Government & command ===
+    LayerSpec(id="resources_govt", group="Government", label="State House",
+              geojson="resources_govt.geojson",
+              source_url="poster: 07_resources.py",
+              style={"point": "#5b3a1a", "pointRadius": 10, "line": "#3a2f1d", "lineWidth": 1.5},
+              visible_default=False),
+    LayerSpec(id="resources_command", group="Government", label="Supreme Court / DOS HQ / data ctr",
+              geojson="resources_command.geojson",
+              source_url="poster: 07_resources.py",
+              style={"point": "#7d6608", "pointRadius": 8, "line": "#3a2f1d", "lineWidth": 1.2},
+              visible_default=False),
+
+    # === Lifelines: water ===
+    LayerSpec(id="resources_water", group="Water", label="Drinking water + WWTPs",
+              geojson="resources_water.geojson",
+              source_url="poster: 07_resources.py (Hutchins WTP, Hall St WWTP, Penacook Lake)",
+              style={"point": "#1f618d", "pointRadius": 9, "line": "#3a2f1d", "lineWidth": 1.2},
+              visible_default=False),
+
+    # === Lifelines: power + fuel ===
+    LayerSpec(id="garvins_falls", group="Power", label="Garvins Falls hydro (12.4 MW)",
+              geojson="garvins_falls.geojson",
+              source_url="Hull Street Energy / FERC; mid-river on the Bow line",
+              style={"point": "#f1c40f", "pointRadius": 11, "line": "#3a2f1d", "lineWidth": 1.5},
+              visible_default=False,
+              note="The contested generator — neither bank can claim it"),
+    LayerSpec(id="resources_energy", group="Power", label="Solar + propane + transfer station",
+              geojson="resources_energy.geojson",
+              source_url="poster: 07_resources.py (Rymes Propane, Old Turnpike solar 6.7 MW)",
+              style={"point": "#9c640c", "pointRadius": 8, "line": "#3a2f1d", "lineWidth": 1.2},
+              visible_default=False),
+
+    # === Logistics & fortress ===
+    LayerSpec(id="resources_logistics", group="Logistics", label="Loudon Rd big-box belt",
+              geojson="resources_logistics.geojson",
+              source_url="poster: 07_resources.py (Walmart/Sam's/Target/Market Basket)",
+              style={"point": "#7d6608", "pointRadius": 8, "line": "#3a2f1d", "lineWidth": 1.2},
+              visible_default=False),
+    LayerSpec(id="resources_fortress", group="Logistics", label="Steeplegate Mall (staging)",
+              geojson="resources_fortress.geojson",
+              source_url="poster: 07_resources.py",
+              style={"point": "#6e2c00", "pointRadius": 9, "line": "#3a2f1d", "lineWidth": 1.2},
+              visible_default=False),
+    LayerSpec(id="resources_transport", group="Logistics", label="Concord Municipal Airport",
+              geojson="resources_transport.geojson",
+              source_url="poster: 07_resources.py",
+              style={"point": "#196f3d", "pointRadius": 9, "line": "#3a2f1d", "lineWidth": 1.2},
+              visible_default=False),
 ]
 
 
@@ -153,6 +339,17 @@ def main(gpkg: Path = DEFAULT_GPKG, out_dir: Path | None = None) -> int:
     if target.exists():
         target.unlink()
     p_cross.rename(target)
+
+    # Pass A+ additions: tactical overlays and the resource catalog. Viewshed
+    # polygons are raster-derived with thousands of jagged vertices; a 25 m
+    # tolerance drops them from ~7 MB to ~200 KB without changing what the eye
+    # sees at city-scale zoom.
+    export_layer(gpkg, "viewshed_east", out_dir, simplify_tolerance_deg=0.00025)
+    export_layer(gpkg, "exposed_west", out_dir, simplify_tolerance_deg=0.00025)
+    export_layer(gpkg, "flashpoints", out_dir)
+    res_counts = export_resources_by_category(gpkg, out_dir)
+    print(f"  resources split by category: {res_counts}")
+    write_extra_points(out_dir)
 
     write_manifest(PASS_A_MANIFEST, out_dir / "manifest.json")
     write_chapters(out_dir / "chapters.json")

@@ -13,24 +13,54 @@
   let geo = $state({});
   let camera = $state({ center: [-71.538, 43.207], zoom: 11, pitch: 0, bearing: 0 });
 
+  /** Set of layer ids that have been fetched (or are in flight). */
+  const inflight = new Set();
+
+  /** @param {string[]} ids — fetch each layer's GeoJSON if not already loaded. */
+  async function loadLayers(ids) {
+    const targets = ids.filter((id) => !geo[id] && !inflight.has(id) && specs.find((s) => s.id === id));
+    if (targets.length === 0) return;
+    for (const id of targets) inflight.add(id);
+    const results = await Promise.all(
+      targets.map(async (id) => {
+        const spec = specs.find((s) => s.id === id);
+        try {
+          const data = await loadGeoJSON(spec.geojson);
+          return /** @type {const} */ ([id, data]);
+        } catch (err) {
+          console.warn(`failed to load ${spec.geojson}:`, err);
+          return null;
+        }
+      })
+    );
+    const next = { ...geo };
+    for (const r of results) if (r) next[r[0]] = r[1];
+    geo = next;
+    for (const id of targets) inflight.delete(id);
+  }
+
   onMount(async () => {
     const m = await loadManifest();
     specs = m.layers;
     const c = await loadChapters();
     chapters = c.chapters;
     // Apply chapter 1's camera + layers on initial mount so the first paint
-    // matches the intended view (scrollama may not fire onStepEnter on load).
+    // matches the intended view (scrollama only fires once cards intersect).
     if (chapters.length > 0) {
       camera = { ...chapters[0].camera };
       setChapter(chapters[0].id);
       applyChapterLayers(chapters[0].layers);
+      // Preload only chapter 1's layers — the rest fetch on first toggle.
+      await loadLayers(chapters[0].layers);
     }
-    // Lazy-load every layer's GeoJSON (Pass A only has 6 small files; fine to load all)
-    const loaded = {};
-    await Promise.all(specs.map(async (s) => {
-      loaded[s.id] = await loadGeoJSON(s.geojson);
-    }));
-    geo = loaded;
+  });
+
+  // Lazy-load any newly-visible layer that isn't in geo yet (e.g. user toggled
+  // a checkbox on or scrolled into a chapter that needs heavier layers).
+  $effect(() => {
+    const ids = Array.from($visibleLayers);
+    if (ids.length === 0 || specs.length === 0) return;
+    loadLayers(ids);
   });
 
   /** @param {any} ch */
