@@ -25,6 +25,8 @@
   let map = null;
   /** @type {MapboxOverlay | null} */
   let overlay = null;
+  // Animation clock (ms); bumped by rAF only while an offensive arc is visible.
+  let frame = $state(0);
 
   onMount(() => {
     map = new maplibregl.Map({
@@ -74,10 +76,27 @@
     });
   });
 
-  // Reactive: re-render deck layers when visible set or geo cache changes
+  // Reactive: re-render deck layers when visible set, geo cache, or animation
+  // frame changes. `frame` advances ~60fps only while an arc layer is on, which
+  // is what crawls the tracer dots; otherwise this runs only on data changes.
   $effect(() => {
     if (!overlay) return;
-    overlay.setProps({ layers: buildDeckLayers(visible, geo, specs) });
+    const t = (frame % 2500) / 2500;
+    overlay.setProps({ layers: buildDeckLayers(visible, geo, specs, t) });
+  });
+
+  // Reactive: drive the rAF clock only while an offensive arc layer is visible,
+  // so an idle explorer pays no per-frame cost.
+  $effect(() => {
+    const animating = specs.some((s) => s.style?.arc && visible.has(s.id));
+    if (!animating) return;
+    let raf = 0;
+    const loop = () => {
+      frame = performance.now();
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
   });
 
   // Reactive: enable real 3D terrain when the terrain_3d layer is on (High Ground).

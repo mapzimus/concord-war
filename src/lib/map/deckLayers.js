@@ -1,4 +1,4 @@
-import { GeoJsonLayer, TextLayer, ArcLayer } from '@deck.gl/layers';
+import { GeoJsonLayer, TextLayer, ArcLayer, ScatterplotLayer } from '@deck.gl/layers';
 
 const ARC_COLORS = {
   bombardment: [158, 59, 46],
@@ -12,9 +12,10 @@ const ARC_COLORS = {
  * @param {Set<string>} visible       Layer ids that should be drawn.
  * @param {Record<string, object>} geo Map from layer id -> loaded GeoJSON FeatureCollection.
  * @param {import('../data/manifest.js').LayerSpec[]} specs Full manifest list (for styling).
+ * @param {number} t Animation phase in [0, 1) used to crawl arc tracer dots.
  * @returns {object[]} deck.gl layer instances.
  */
-export function buildDeckLayers(visible, geo, specs) {
+export function buildDeckLayers(visible, geo, specs, t = 0) {
   const out = [];
   for (const spec of specs) {
     if (!visible.has(spec.id)) continue;
@@ -44,6 +45,36 @@ export function buildDeckLayers(visible, geo, specs) {
           getWidth: (d) => (d.kind === 'armor' ? 6 : d.kind === 'air_assault' ? 4 : 5),
           widthUnits: 'pixels',
           getHeight: 0.45
+        })
+      );
+
+      // Animated tracer dots crawling each arc's ground track (source -> target),
+      // three per arc at staggered phases so the corridor reads as "in motion".
+      const tracers = [];
+      for (const a of arcs) {
+        const col = ARC_COLORS[a.kind] || [158, 59, 46];
+        for (let k = 0; k < 3; k++) {
+          const u = (t + k / 3) % 1;
+          tracers.push({
+            position: [a.s[0] + (a.t[0] - a.s[0]) * u, a.s[1] + (a.t[1] - a.s[1]) * u],
+            color: col
+          });
+        }
+      }
+      out.push(
+        new ScatterplotLayer({
+          id: `${spec.id}__tracer`,
+          data: tracers,
+          getPosition: (d) => d.position,
+          getFillColor: (d) => d.color,
+          getRadius: 4.5,
+          radiusUnits: 'pixels',
+          stroked: true,
+          getLineColor: [231, 220, 192, 255],
+          lineWidthMinPixels: 1,
+          pickable: false,
+          parameters: { depthTest: false },
+          updateTriggers: { getPosition: t }
         })
       );
       continue;
