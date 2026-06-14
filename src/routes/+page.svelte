@@ -3,8 +3,9 @@
   import ConcordMap from '$lib/map/ConcordMap.svelte';
   import Scrollytelling from '$lib/story/Scrollytelling.svelte';
   import LayerPanel from '$lib/explorer/LayerPanel.svelte';
+  import LayerDrawer from '$lib/explorer/LayerDrawer.svelte';
   import { loadManifest, loadChapters, loadGeoJSON } from '$lib/data/manifest.js';
-  import { visibleLayers, applyChapterLayers, setChapter } from '$lib/data/stores.js';
+  import { visibleLayers, applyChapterLayers, setChapter, selectFeature, clearSelection } from '$lib/data/stores.js';
 
   /** @type {import('$lib/data/manifest.js').LayerSpec[]} */
   let specs = $state([]);
@@ -75,7 +76,13 @@
 
 <div class="layout">
   <div class="map-pane">
-    <ConcordMap {camera} visible={$visibleLayers} {geo} {specs} />
+    <ConcordMap
+      {camera}
+      visible={$visibleLayers}
+      {geo}
+      {specs}
+      onPick={(p) => (p ? selectFeature(p) : clearSelection())}
+    />
   </div>
 
   <div class="story-pane">
@@ -85,6 +92,8 @@
   <div class="panel-pane">
     <LayerPanel {specs} />
   </div>
+
+  <LayerDrawer {specs} />
 </div>
 
 <style>

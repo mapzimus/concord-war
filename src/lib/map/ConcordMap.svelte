@@ -15,7 +15,8 @@
   let { camera = { center: [-71.538, 43.207], zoom: 11, pitch: 0, bearing: 0 },
         visible = new Set(),
         geo = {},
-        specs = [] } = $props();
+        specs = [],
+        onPick = (/** @type {any} */ _p) => {} } = $props();
 
   /** @type {HTMLDivElement | undefined} */
   let container = $state();
@@ -36,7 +37,19 @@
       attributionControl: false
     });
     map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right');
-    overlay = new MapboxOverlay({ interleaved: false, layers: [] });
+    overlay = new MapboxOverlay({
+      interleaved: false,
+      layers: [],
+      onClick: (info) => {
+        if (info && info.object && info.layer && !info.layer.id.endsWith('__labels')) {
+          onPick({ layerId: info.layer.id, properties: info.object.properties || {} });
+        } else {
+          onPick(null);
+        }
+      },
+      getCursor: ({ isHovering, isDragging }) =>
+        isDragging ? 'grabbing' : isHovering ? 'pointer' : 'grab'
+    });
     map.on('load', () => {
       map?.addControl(overlay);
       overlay?.setProps({ layers: buildDeckLayers(visible, geo, specs) });

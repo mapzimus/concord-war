@@ -25,3 +25,18 @@ export function toggleLayer(layerId) {
 export function applyChapterLayers(ids) {
   visibleLayers.set(new Set(ids));
 }
+
+/**
+ * The feature the user clicked, surfaced to the drawer.
+ * @type {import('svelte/store').Writable<null | {layerId: string, properties: Record<string, any>}>}
+ */
+export const selectedFeature = writable(null);
+
+/** @param {{layerId: string, properties: Record<string, any>}} payload */
+export function selectFeature(payload) {
+  selectedFeature.set(payload);
+}
+
+export function clearSelection() {
+  selectedFeature.set(null);
+}
