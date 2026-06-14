@@ -79,6 +79,21 @@
     if (!overlay) return;
     overlay.setProps({ layers: buildDeckLayers(visible, geo, specs) });
   });
+
+  // Reactive: enable real 3D terrain when the terrain_3d layer is on (High Ground).
+  $effect(() => {
+    if (!map) return;
+    const want3d = visible.has('terrain_3d');
+    const apply = () => {
+      try {
+        map?.setTerrain(want3d ? { source: 'terrarium', exaggeration: 1.4 } : null);
+      } catch (e) {
+        /* style not ready yet */
+      }
+    };
+    if (map.isStyleLoaded()) apply();
+    else map.once('load', apply);
+  });
 </script>
 
 <div class="map" bind:this={container}></div>

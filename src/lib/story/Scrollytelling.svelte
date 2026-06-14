@@ -1,5 +1,5 @@
 <script>
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount, onDestroy, tick } from 'svelte';
   import scrollama from 'scrollama';
   import Chapter from './Chapter.svelte';
   import { setChapter, applyChapterLayers } from '../data/stores.js';
@@ -12,11 +12,15 @@
 
   /** @type {ReturnType<typeof scrollama> | undefined} */
   let scroller;
+  let didSetup = false;
 
-  onMount(() => {
+  async function setupScroller() {
+    if (didSetup || !chapters.length) return;
+    didSetup = true;
+    await tick(); // wait for the {#each} to render the .chapter elements
     scroller = scrollama();
     scroller
-      .setup({ step: '.chapter', offset: 0.5, debug: false })
+      .setup({ step: '.chapter', offset: 0.6, debug: false })
       .onStepEnter((response) => {
         const idx = Number(response.element.dataset.idx);
         const ch = chapters[idx];
@@ -29,8 +33,17 @@
       .onStepExit((response) => {
         response.element.classList.remove('active');
       });
+  }
+
+  // Set up scrollama only once chapters have populated and rendered.
+  $effect(() => {
+    if (chapters.length && !didSetup) setupScroller();
+  });
+
+  onMount(() => {
     const resize = () => scroller?.resize();
     window.addEventListener('resize', resize);
+    return () => window.removeEventListener('resize', resize);
   });
 
   onDestroy(() => {

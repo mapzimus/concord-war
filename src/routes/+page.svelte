@@ -22,7 +22,9 @@
 
   /** @param {string[]} ids — fetch each layer's GeoJSON if not already loaded. */
   async function loadLayers(ids) {
-    const targets = ids.filter((id) => !geo[id] && !inflight.has(id) && specs.find((s) => s.id === id));
+    const targets = ids.filter(
+      (id) => !geo[id] && !inflight.has(id) && specs.find((s) => s.id === id && s.geojson)
+    );
     if (targets.length === 0) return;
     for (const id of targets) inflight.add(id);
     const results = await Promise.all(
@@ -120,11 +122,12 @@
     z-index: 1;
   }
   .story-pane {
-    position: absolute;
-    top: 0;
-    left: 24px;
+    position: relative;
+    margin-top: -100vh; /* overlay the sticky map; the chapters create the scroll height */
+    margin-left: 24px;
     width: min(40vw, 520px);
     z-index: 3;
+    pointer-events: none;
   }
   .panel-pane {
     position: fixed;

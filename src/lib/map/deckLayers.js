@@ -1,4 +1,10 @@
-import { GeoJsonLayer, TextLayer } from '@deck.gl/layers';
+import { GeoJsonLayer, TextLayer, ArcLayer } from '@deck.gl/layers';
+
+const ARC_COLORS = {
+  bombardment: [158, 59, 46],
+  air_assault: [26, 82, 118],
+  armor: [110, 44, 0]
+};
 
 /**
  * Build the deck.gl layer list for a given visible-layer set.
@@ -14,6 +20,34 @@ export function buildDeckLayers(visible, geo, specs) {
     if (!visible.has(spec.id)) continue;
     const data = geo[spec.id];
     if (!data) continue;
+
+    // Arc layers (offensive trajectories) render as curved ArcLayer, not flat lines.
+    if (spec.style.arc && Array.isArray(data.features)) {
+      const arcs = data.features
+        .filter((f) => f.geometry && f.geometry.type === 'LineString' && f.geometry.coordinates.length >= 2)
+        .map((f) => {
+          const c = f.geometry.coordinates;
+          return { s: c[0], t: c[c.length - 1], kind: f.properties?.kind, properties: f.properties || {} };
+        });
+      out.push(
+        new ArcLayer({
+          id: spec.id,
+          data: arcs,
+          pickable: true,
+          getSourcePosition: (d) => d.s,
+          getTargetPosition: (d) => d.t,
+          getSourceColor: (d) => ARC_COLORS[d.kind] || [158, 59, 46],
+          getTargetColor: (d) => {
+            const c = ARC_COLORS[d.kind] || [158, 59, 46];
+            return [c[0], c[1], c[2], 110];
+          },
+          getWidth: (d) => (d.kind === 'armor' ? 6 : d.kind === 'air_assault' ? 4 : 5),
+          widthUnits: 'pixels',
+          getHeight: 0.45
+        })
+      );
+      continue;
+    }
 
     // Point fill takes precedence over polygon fill so points always render
     // visibly even when a polygon-style isn't set.

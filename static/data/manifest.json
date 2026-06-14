@@ -410,15 +410,28 @@
     {
       "id": "blitz_arcs",
       "group": "Tactical",
-      "label": "Blitz \u2014 offensive arrows",
+      "label": "Blitz \u2014 offensive arcs",
       "geojson": "blitz_arcs.geojson",
       "source_url": "authored from the blitz scenario (HIMARS / air assault / armor)",
       "style": {
+        "arc": true,
         "line": "#c0392b",
         "lineWidth": 3
       },
       "visible_default": false,
       "note": "East's week-one offensive: bombardment, air assault, armor thrusts"
+    },
+    {
+      "id": "terrain_3d",
+      "group": "Terrain",
+      "label": "3D terrain (the Heights)",
+      "geojson": "",
+      "source_url": "Mapzen / AWS Terrain Tiles (terrarium raster-DEM)",
+      "style": {
+        "terrain": true
+      },
+      "visible_default": false,
+      "note": "Toggles real 3D relief + hillshade; best with a tilted camera"
     },
     {
       "id": "siege_overlay",
