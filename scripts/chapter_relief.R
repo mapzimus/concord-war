@@ -24,6 +24,9 @@ CRSc <- 32145
 PAPER <- "#f2e8cf"; INK <- "#2c2417"
 WEST <- "#2f5d80"; EAST <- "#9e3b2e"; CONTEST <- "#c4825a"; WATER <- "#34657f"; FRONT <- "#1c1206"
 ARC <- c(bombardment = "#b5402f", air_assault = "#356c92", armor = "#6e4a1f")
+CAT_COL <- c(medical = "#c0392b", education = "#2e86c1", government = "#6e2c00", power = "#f1c40f",
+             water = "#1f618d", transport = "#196f3d", logistics = "#b9770e", public_safety = "#884ea0",
+             worship = "#7d6608", comms = "#117a65", fuel = "#d35400", civic = "#5d6d7e", military = "#4a1c1c")
 
 fam_disp <- "serif"; fam_body <- "serif"
 if (ok_show) try({
@@ -97,6 +100,12 @@ draw_layer <- function(lid, gdf) {
       lt  <- if (lid == "front_line") "11" else "solid"
       geoms <- list(geom_sf(data = gdf, colour = col, linewidth = if (!is.null(st$lineWidth)) st$lineWidth * 0.5 else 0.8, linetype = lt))
     }
+  } else if (lid == "city_pois") {  # 187 POIs coloured by category, no labels
+    cols <- unname(CAT_COL[as.character(gdf$category)]); cols[is.na(cols)] <- "#3a2f1d"
+    geoms <- list(
+      geom_sf(data = gdf, colour = PAPER, size = 1.9),
+      geom_sf(data = gdf, colour = cols, size = 1.25))
+    return(list(geoms = geoms, labels = NULL))
   } else {  # points
     col <- if (!is.null(st$point)) st$point else "#7b241c"
     pr <- if (!is.null(st$pointRadius)) st$pointRadius else 7

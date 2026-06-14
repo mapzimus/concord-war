@@ -462,6 +462,20 @@
       },
       "visible_default": false,
       "note": ""
+    },
+    {
+      "id": "city_pois",
+      "group": "Landmarks",
+      "label": "City landmarks (187, by category)",
+      "geojson": "city_pois.geojson",
+      "source_url": "OpenStreetMap contributors (ODbL) \u2014 strategic named features citywide",
+      "style": {
+        "point": "#3a2f1d",
+        "pointRadius": 4,
+        "categoryColors": true
+      },
+      "visible_default": false,
+      "note": "187 real named POIs (medical, education, government, power, water, transport, logistics, public safety, worship, comms, fuel, military), banked West/East/Contested."
     }
   ]
 }

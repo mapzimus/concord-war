@@ -27,7 +27,8 @@
         "territory_west",
         "territory_east",
         "territory_contested",
-        "territory_contested_stripes"
+        "territory_contested_stripes",
+        "city_pois"
       ],
       "camera": {
         "center": [
@@ -379,7 +380,8 @@
         "front_line",
         "territory_west",
         "territory_east",
-        "territory_contested"
+        "territory_contested",
+        "city_pois"
       ],
       "camera": {
         "center": [

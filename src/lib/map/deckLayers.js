@@ -6,6 +6,13 @@ const ARC_COLORS = {
   armor: [110, 44, 0]
 };
 
+// strategic-POI category palette (city_pois layer)
+const CATEGORY_COLORS = {
+  medical: '#c0392b', education: '#2e86c1', government: '#6e2c00', power: '#f1c40f',
+  water: '#1f618d', transport: '#196f3d', logistics: '#b9770e', public_safety: '#884ea0',
+  worship: '#7d6608', comms: '#117a65', fuel: '#d35400', civic: '#5d6d7e', military: '#4a1c1c'
+};
+
 /**
  * Build the deck.gl layer list for a given visible-layer set.
  *
@@ -94,8 +101,10 @@ export function buildDeckLayers(visible, geo, specs, t = 0) {
         filled: true,
         pickable: true,
         lineWidthMinPixels: spec.style.lineWidth ?? 1,
-        getLineColor: lineColor,
-        getFillColor: pointFill || polyFill || [0, 0, 0, 0],
+        getLineColor: spec.style.categoryColors ? [42, 35, 23, 220] : lineColor,
+        getFillColor: spec.style.categoryColors
+          ? (f) => hexToRgba(CATEGORY_COLORS[f.properties?.category] || '#3a2f1d', 1)
+          : pointFill || polyFill || [0, 0, 0, 0],
         getPointRadius: spec.style.pointRadius ?? 6,
         pointRadiusUnits: 'pixels'
       })
@@ -103,7 +112,7 @@ export function buildDeckLayers(visible, geo, specs, t = 0) {
 
     // Text labels for point layers — GeoJsonLayer can't render text, so pair a
     // TextLayer that pulls each point's `name` (SDF font + parchment halo).
-    if (spec.style.point && Array.isArray(data.features)) {
+    if (spec.style.point && !spec.style.categoryColors && Array.isArray(data.features)) {
       const pts = data.features
         .filter((f) => f.geometry && f.geometry.type === 'Point' && f.properties && f.properties.name)
         .map((f) => ({ position: f.geometry.coordinates, text: f.properties.name }));
