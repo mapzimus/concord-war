@@ -106,7 +106,8 @@
   .back {
     position: fixed;
     top: 16px;
-    left: 16px;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 8;
     background: var(--ink);
     color: var(--parchment);
