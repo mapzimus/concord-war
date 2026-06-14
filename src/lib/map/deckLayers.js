@@ -1,4 +1,4 @@
-import { GeoJsonLayer } from '@deck.gl/layers';
+import { GeoJsonLayer, TextLayer } from '@deck.gl/layers';
 
 /**
  * Build the deck.gl layer list for a given visible-layer set.
@@ -14,6 +14,7 @@ export function buildDeckLayers(visible, geo, specs) {
     if (!visible.has(spec.id)) continue;
     const data = geo[spec.id];
     if (!data) continue;
+
     // Point fill takes precedence over polygon fill so points always render
     // visibly even when a polygon-style isn't set.
     const pointFill = spec.style.point ? hexToRgba(spec.style.point, 1) : null;
@@ -34,6 +35,38 @@ export function buildDeckLayers(visible, geo, specs) {
         pointRadiusUnits: 'pixels'
       })
     );
+
+    // Text labels for point layers — GeoJsonLayer can't render text, so pair a
+    // TextLayer that pulls each point's `name` (SDF font + parchment halo).
+    if (spec.style.point && Array.isArray(data.features)) {
+      const pts = data.features
+        .filter((f) => f.geometry && f.geometry.type === 'Point' && f.properties && f.properties.name)
+        .map((f) => ({ position: f.geometry.coordinates, text: f.properties.name }));
+      if (pts.length) {
+        out.push(
+          new TextLayer({
+            id: `${spec.id}__labels`,
+            data: pts,
+            getPosition: (d) => d.position,
+            getText: (d) => d.text,
+            getSize: 13,
+            sizeUnits: 'pixels',
+            getColor: hexToRgba(spec.style.point),
+            getTextAnchor: 'start',
+            getAlignmentBaseline: 'center',
+            getPixelOffset: [(spec.style.pointRadius ?? 6) + 4, 0],
+            fontFamily: 'Georgia, "Times New Roman", serif',
+            fontWeight: 700,
+            outlineWidth: 2,
+            outlineColor: [231, 220, 192, 255],
+            fontSettings: { sdf: true },
+            billboard: true,
+            pickable: false,
+            parameters: { depthTest: false }
+          })
+        );
+      }
+    }
   }
   return out;
 }
