@@ -23,6 +23,7 @@ from pyproj import Transformer
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
+from adjustText import adjust_text  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "static" / "data"
@@ -74,7 +75,7 @@ def load_layers(manifest):
     return layers
 
 
-def draw_layer(ax, lid, gdf, style):
+def draw_layer(ax, lid, gdf, style, labels=None):
     gtype = gdf.geom_type.iloc[0]
     if "Polygon" in gtype:
         fill = style.get("fill")
@@ -109,13 +110,12 @@ def draw_layer(ax, lid, gdf, style):
         gdf.plot(ax=ax, color=col, markersize=style.get("pointRadius", 7) * 6,
                  edgecolor=PARCH, linewidth=0.6, zorder=11)
         namecol = next((c for c in ("name", "Name", "NAME") if c in gdf.columns), None)
-        if namecol:
+        if namecol and labels is not None:
             for _, row in gdf.iterrows():
                 nm = str(row[namecol])
                 if not nm or nm == "None":
                     continue
-                ax.annotate(nm[:34], (row.geometry.x, row.geometry.y), xytext=(7, 3),
-                            textcoords="offset points", **halo(8, "bold", col, 2.0), zorder=12)
+                labels.append({"x": row.geometry.x, "y": row.geometry.y, "text": nm[:44], "color": col})
 
 
 def main() -> int:
@@ -142,6 +142,7 @@ def main() -> int:
         ax.set_facecolor(PARCH)
         ax.set_aspect("equal")
         ax.set_axis_off()
+        labels = []
 
         # always-on geographic context
         for ctx, st in [("surrounding_towns", {"line": "#cdbf9c", "lineWidth": 0.5}),
@@ -150,7 +151,7 @@ def main() -> int:
                         ("front_line", {"line": FRONT, "lineWidth": 2.4})]:
             if ctx in layers:
                 try:
-                    draw_layer(ax, ctx, layers[ctx], st)
+                    draw_layer(ax, ctx, layers[ctx], st, labels)
                 except Exception as e:  # noqa: BLE001
                     print(f"  [warn] ctx {ctx}: {e}")
 
@@ -161,12 +162,22 @@ def main() -> int:
             if lid not in layers:
                 continue
             try:
-                draw_layer(ax, lid, layers[lid], style_by_id.get(lid, {}))
+                draw_layer(ax, lid, layers[lid], style_by_id.get(lid, {}), labels)
             except Exception as e:  # noqa: BLE001
                 print(f"  [warn] {cid}/{lid}: {e}")
 
         ax.set_xlim(minx - mx, maxx + mx)
         ax.set_ylim(miny - my, maxy + my)
+
+        # place point labels and de-conflict overlaps (with leader lines)
+        if labels:
+            texts = [ax.text(p["x"], p["y"], p["text"],
+                             **halo(8.5, "bold", p["color"], 2.2), zorder=13) for p in labels]
+            try:
+                adjust_text(texts, x=[p["x"] for p in labels], y=[p["y"] for p in labels], ax=ax,
+                            arrowprops=dict(arrowstyle="-", color="#6b5a2a", lw=0.6, alpha=0.7))
+            except Exception as e:  # noqa: BLE001
+                print(f"  [warn] adjust_text {cid}: {e}")
 
         # title cartouche (top-left)
         ax.text(0.025, 0.965, f"{i:02d}  {ch['title']}", transform=ax.transAxes, va="top",
