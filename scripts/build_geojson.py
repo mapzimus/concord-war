@@ -321,6 +321,35 @@ PASS_A_MANIFEST: list[LayerSpec] = [
               source_url="poster: 07_resources.py",
               style={"point": "#196f3d", "pointRadius": 9, "line": "#3a2f1d", "lineWidth": 1.2},
               visible_default=False),
+
+    # === Lifeline networks (workflow-sourced) ===
+    LayerSpec(id="lifelines_power", group="Power", label="Power & utility network",
+              geojson="lifelines_power.geojson",
+              source_url="workflow research: substations, Garvins Falls, solar, gas, comms (cited per point)",
+              style={"point": "#9c640c", "pointRadius": 7, "line": "#3a2f1d", "lineWidth": 1.0},
+              visible_default=False),
+    LayerSpec(id="lifelines_water", group="Water", label="Water & wastewater network",
+              geojson="lifelines_water.geojson",
+              source_url="workflow research: Penacook Lake, Hutchins WTP, Hall St + Penacook WWTP (cited per point)",
+              style={"point": "#1f618d", "pointRadius": 7, "line": "#3a2f1d", "lineWidth": 1.0},
+              visible_default=False),
+
+    # === Transport / scenario layers ===
+    LayerSpec(id="i93_exits", group="Transport", label="I-93 interchanges",
+              geojson="i93_exits.geojson",
+              source_url="City of Concord interstate-exit layer (Exits 12-17 = I-93)",
+              style={"point": "#6e2c00", "pointRadius": 6, "line": "#3a2f1d", "lineWidth": 1.0},
+              visible_default=False),
+    LayerSpec(id="blitz_arcs", group="Tactical", label="Blitz — offensive arrows",
+              geojson="blitz_arcs.geojson",
+              source_url="authored from the blitz scenario (HIMARS / air assault / armor)",
+              style={"line": "#c0392b", "lineWidth": 3}, visible_default=False,
+              note="East's week-one offensive: bombardment, air assault, armor thrusts"),
+    LayerSpec(id="siege_overlay", group="Tactical", label="Siege — held/blown crossings",
+              geojson="siege_overlay.geojson",
+              source_url="derived: the crossings as chokepoints West holds or blows",
+              style={"point": "#7b241c", "pointRadius": 8, "line": "#3a2f1d", "lineWidth": 1.5},
+              visible_default=False),
 ]
 
 
@@ -352,9 +381,10 @@ def main(gpkg: Path = DEFAULT_GPKG, out_dir: Path | None = None) -> int:
     write_extra_points(out_dir)
 
     write_manifest(PASS_A_MANIFEST, out_dir / "manifest.json")
-    write_chapters(out_dir / "chapters.json")
+    # chapters.json is now authored by the deep-content workflow (apply_workflow.py),
+    # not generated here — don't clobber it.
 
-    print(f"wrote {len(PASS_A_MANIFEST)} layers + manifest + chapters")
+    print(f"wrote {len(PASS_A_MANIFEST)} layers + manifest")
     return 0
 
 

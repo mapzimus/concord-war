@@ -361,6 +361,79 @@
       },
       "visible_default": false,
       "note": ""
+    },
+    {
+      "id": "lifelines_power",
+      "group": "Power",
+      "label": "Power & utility network",
+      "geojson": "lifelines_power.geojson",
+      "source_url": "workflow research: substations, Garvins Falls, solar, gas, comms (cited per point)",
+      "style": {
+        "point": "#9c640c",
+        "pointRadius": 7,
+        "line": "#3a2f1d",
+        "lineWidth": 1.0
+      },
+      "visible_default": false,
+      "note": ""
+    },
+    {
+      "id": "lifelines_water",
+      "group": "Water",
+      "label": "Water & wastewater network",
+      "geojson": "lifelines_water.geojson",
+      "source_url": "workflow research: Penacook Lake, Hutchins WTP, Hall St + Penacook WWTP (cited per point)",
+      "style": {
+        "point": "#1f618d",
+        "pointRadius": 7,
+        "line": "#3a2f1d",
+        "lineWidth": 1.0
+      },
+      "visible_default": false,
+      "note": ""
+    },
+    {
+      "id": "i93_exits",
+      "group": "Transport",
+      "label": "I-93 interchanges",
+      "geojson": "i93_exits.geojson",
+      "source_url": "City of Concord interstate-exit layer (Exits 12-17 = I-93)",
+      "style": {
+        "point": "#6e2c00",
+        "pointRadius": 6,
+        "line": "#3a2f1d",
+        "lineWidth": 1.0
+      },
+      "visible_default": false,
+      "note": ""
+    },
+    {
+      "id": "blitz_arcs",
+      "group": "Tactical",
+      "label": "Blitz \u2014 offensive arrows",
+      "geojson": "blitz_arcs.geojson",
+      "source_url": "authored from the blitz scenario (HIMARS / air assault / armor)",
+      "style": {
+        "line": "#c0392b",
+        "lineWidth": 3
+      },
+      "visible_default": false,
+      "note": "East's week-one offensive: bombardment, air assault, armor thrusts"
+    },
+    {
+      "id": "siege_overlay",
+      "group": "Tactical",
+      "label": "Siege \u2014 held/blown crossings",
+      "geojson": "siege_overlay.geojson",
+      "source_url": "derived: the crossings as chokepoints West holds or blows",
+      "style": {
+        "point": "#7b241c",
+        "pointRadius": 8,
+        "line": "#3a2f1d",
+        "lineWidth": 1.5
+      },
+      "visible_default": false,
+      "note": ""
     }
   ]
 }

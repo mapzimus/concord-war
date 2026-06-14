@@ -4,6 +4,7 @@
   import Scrollytelling from '$lib/story/Scrollytelling.svelte';
   import LayerPanel from '$lib/explorer/LayerPanel.svelte';
   import LayerDrawer from '$lib/explorer/LayerDrawer.svelte';
+  import ForcesDashboard from '$lib/dashboard/ForcesDashboard.svelte';
   import { loadManifest, loadChapters, loadGeoJSON } from '$lib/data/manifest.js';
   import { visibleLayers, applyChapterLayers, setChapter, selectFeature, clearSelection } from '$lib/data/stores.js';
 
@@ -12,6 +13,8 @@
   let chapters = $state([]);
   /** @type {Record<string, object>} */
   let geo = $state({});
+  /** @type {any[]} */
+  let installations = $state([]);
   let camera = $state({ center: [-71.538, 43.207], zoom: 11, pitch: 0, bearing: 0 });
 
   /** Set of layer ids that have been fetched (or are in flight). */
@@ -45,6 +48,11 @@
     specs = m.layers;
     const c = await loadChapters();
     chapters = c.chapters;
+    try {
+      installations = (await loadGeoJSON('installations.json')).installations ?? [];
+    } catch (e) {
+      console.warn('installations.json load failed', e);
+    }
     // Apply chapter 1's camera + layers on initial mount so the first paint
     // matches the intended view (scrollama only fires once cards intersect).
     if (chapters.length > 0) {
@@ -93,7 +101,9 @@
     <LayerPanel {specs} />
   </div>
 
-  <LayerDrawer {specs} />
+  <LayerDrawer {specs} {installations} />
+
+  <ForcesDashboard />
 </div>
 
 <style>
