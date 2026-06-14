@@ -183,6 +183,21 @@
       "note": "UH-60 air mobility \u2014 East can bypass the bridges"
     },
     {
+      "id": "tanks",
+      "group": "Military",
+      "label": "Tanks / tracked armor",
+      "geojson": "tanks.geojson",
+      "source_url": "NH National Guard State Military Reservation (reported on-site)",
+      "style": {
+        "point": "#4a1c1c",
+        "pointRadius": 12,
+        "line": "#1a0e0e",
+        "lineWidth": 2
+      },
+      "visible_default": false,
+      "note": "East's heaviest ground armor \u2014 flips the armor advantage East"
+    },
+    {
       "id": "resources_military",
       "group": "Military",
       "label": "NHARNG sites",

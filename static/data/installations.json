@@ -649,6 +649,27 @@
         }
       ],
       "source_url": "https://www.merrimackcounty.net/departments/sheriff/index.php"
+    },
+    {
+      "name": "Tanks / tracked armor",
+      "category": "armor",
+      "side": "East",
+      "blurb": "Tracked armor at the NH National Guard State Military Reservation (reported on-site) - the heaviest direct-fire ground assets in the city, and East's armored fist.",
+      "stats": [
+        {
+          "label": "Side",
+          "value": "East"
+        },
+        {
+          "label": "Type",
+          "value": "Tracked armor"
+        },
+        {
+          "label": "Sourcing",
+          "value": "On-site report"
+        }
+      ],
+      "source_url": "NH National Guard State Military Reservation, 1 Minuteman Way, Concord"
     }
   ]
 }

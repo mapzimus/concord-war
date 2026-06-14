@@ -106,6 +106,18 @@ def write_extra_points(out_dir: Path) -> None:
                 }
             }]
         },
+        "tanks": {
+            "label": "Tanks / tracked armor",
+            "features": [{
+                "type": "Feature",
+                "geometry": {"type": "Point", "coordinates": [-71.5052, 43.2042]},
+                "properties": {
+                    "name": "Tanks / tracked armor",
+                    "side": "E", "category": "armor",
+                    "note": "Tracked armor at the NH National Guard State Military Reservation (reported on-site). The heaviest direct-fire ground assets in the city - East's armored fist."
+                }
+            }]
+        },
         "garvins_falls": {
             "label": "Garvins Falls hydroelectric (12.4 MW)",
             "features": [{
@@ -248,6 +260,12 @@ PASS_A_MANIFEST: list[LayerSpec] = [
               style={"point": "#1a5276", "pointRadius": 11, "line": "#3a2f1d", "lineWidth": 1.5},
               visible_default=False,
               note="UH-60 air mobility — East can bypass the bridges"),
+    LayerSpec(id="tanks", group="Military", label="Tanks / tracked armor",
+              geojson="tanks.geojson",
+              source_url="NH National Guard State Military Reservation (reported on-site)",
+              style={"point": "#4a1c1c", "pointRadius": 12, "line": "#1a0e0e", "lineWidth": 2},
+              visible_default=False,
+              note="East's heaviest ground armor — flips the armor advantage East"),
     LayerSpec(id="resources_military", group="Military", label="NHARNG sites",
               geojson="resources_military.geojson",
               source_url="poster: 07_resources.py (Census geocoded + bank-validated)",

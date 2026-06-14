@@ -105,7 +105,8 @@
         "resources_military",
         "himars",
         "blackhawks",
-        "resources_command"
+        "resources_command",
+        "tanks"
       ],
       "camera": {
         "center": [
@@ -301,7 +302,8 @@
         "blitz_arcs",
         "himars",
         "blackhawks",
-        "crossings"
+        "crossings",
+        "tanks"
       ],
       "camera": {
         "center": [

@@ -117,6 +117,15 @@
       "unit": "MW (Garvins 12.4 + solar 6.7 both Contested)",
       "advantage": "Contested",
       "source_url": "https://www.gridinfo.com/plant/garvins-falls/2357"
+    },
+    {
+      "key": "tanks",
+      "label": "Tanks / tracked armor",
+      "west": "0",
+      "east": "present",
+      "unit": "State Military Reservation",
+      "advantage": "East",
+      "source_url": "NH National Guard State Military Reservation (reported on-site)"
     }
   ]
 }

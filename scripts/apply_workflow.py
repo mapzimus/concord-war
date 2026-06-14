@@ -40,16 +40,31 @@ def main() -> int:
 
     # 1) chapters.json (the 10-chapter story)
     chapters = r["chapters"]["chapters"]
+    for ch in chapters:  # user-reported tanks belong in the East + Blitz chapters
+        if ch["id"] in ("east_fist", "blitz") and "tanks" not in ch["layers"]:
+            ch["layers"].append("tanks")
     write("chapters.json", {"version": 1, "chapters": chapters})
     print(f"chapters: {len(chapters)} -> {[c['id'] for c in chapters]}")
 
     # 2) forces.json (dashboard metrics)
     metrics = r["dashboard"]["metrics"]
+    metrics.append({
+        "key": "tanks", "label": "Tanks / tracked armor",
+        "west": "0", "east": "present", "unit": "State Military Reservation",
+        "advantage": "East",
+        "source_url": "NH National Guard State Military Reservation (reported on-site)",
+    })
     write("forces.json", {"version": 1, "metrics": metrics})
     print(f"forces metrics: {len(metrics)}")
 
     # 3) installations.json (drawer enrichment)
     inst = r["installations"]["installations"]
+    inst.append({
+        "name": "Tanks / tracked armor", "category": "armor", "side": "East",
+        "blurb": "Tracked armor at the NH National Guard State Military Reservation (reported on-site) - the heaviest direct-fire ground assets in the city, and East's armored fist.",
+        "stats": [{"label": "Side", "value": "East"}, {"label": "Type", "value": "Tracked armor"}, {"label": "Sourcing", "value": "On-site report"}],
+        "source_url": "NH National Guard State Military Reservation, 1 Minuteman Way, Concord",
+    })
     write("installations.json", {"installations": inst})
     print(f"installations: {len(inst)}")
 
