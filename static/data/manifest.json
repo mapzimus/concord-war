@@ -476,6 +476,19 @@
       },
       "visible_default": false,
       "note": "187 real named POIs (medical, education, government, power, water, transport, logistics, public safety, worship, comms, fuel, military), banked West/East/Contested."
+    },
+    {
+      "id": "buildings_3d",
+      "group": "Terrain",
+      "label": "Downtown buildings (3D, lidar height)",
+      "geojson": "downtown_bldgs_h.geojson",
+      "source_url": "USGS 3DEP lidar (NH_Coastal_2019); nDSM = DSM \u2212 ground DTM per OSM footprint",
+      "style": {
+        "extrude": true,
+        "fill": "#bf9b6a"
+      },
+      "visible_default": false,
+      "note": "1,273 downtown footprints extruded to their real lidar-derived height \u2014 tilt with the 3D button to see the city rise."
     }
   ]
 }

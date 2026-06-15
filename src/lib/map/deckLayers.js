@@ -87,6 +87,25 @@ export function buildDeckLayers(visible, geo, specs, t = 0) {
       continue;
     }
 
+    // Extruded buildings (real lidar heights) — 3D massing of downtown.
+    if (spec.style.extrude && Array.isArray(data.features)) {
+      out.push(
+        new GeoJsonLayer({
+          id: spec.id,
+          data,
+          extruded: true,
+          filled: true,
+          wireframe: false,
+          getElevation: (f) => f.properties?.height_m || 5,
+          getFillColor: (f) => buildingColor(f.properties?.height_m || 5),
+          getLineColor: [42, 35, 23, 140],
+          material: { ambient: 0.5, diffuse: 0.7, shininess: 20, specularColor: [60, 50, 35] },
+          pickable: true
+        })
+      );
+      continue;
+    }
+
     // Point fill takes precedence over polygon fill so points always render
     // visibly even when a polygon-style isn't set.
     const pointFill = spec.style.point ? hexToRgba(spec.style.point, 1) : null;
@@ -143,6 +162,26 @@ export function buildDeckLayers(visible, geo, specs, t = 0) {
     }
   }
   return out;
+}
+
+/** Building fill ramp by lidar height (m): parchment-tan → warm brick. */
+function buildingColor(h) {
+  const stops = [
+    [0, [203, 183, 141]],
+    [10, [191, 155, 106]],
+    [18, [158, 106, 69]],
+    [28, [122, 59, 42]]
+  ];
+  let lo = stops[0], hi = stops[stops.length - 1];
+  for (let i = 0; i < stops.length - 1; i++) {
+    if (h >= stops[i][0] && h <= stops[i + 1][0]) {
+      lo = stops[i];
+      hi = stops[i + 1];
+      break;
+    }
+  }
+  const t = hi[0] === lo[0] ? 0 : (h - lo[0]) / (hi[0] - lo[0]);
+  return [0, 1, 2].map((k) => Math.round(lo[1][k] + (hi[1][k] - lo[1][k]) * Math.max(0, Math.min(1, t))));
 }
 
 /** @param {string} hex e.g. "#bcc6a8" */
