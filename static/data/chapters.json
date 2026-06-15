@@ -159,6 +159,47 @@
       }
     },
     {
+      "id": "fire_zones",
+      "title": "Neighborhoods Under the Guns",
+      "subtitle": "Who lives inside the East's field of fire",
+      "body": "Artillery does not respect property lines. Laid against Concord's neighborhoods, the East's line-of-sight fire shows exactly who lives in the beaten zone. The downtown core and the river wards sit under heavy observed fire — every street visible from the Heights and rangeable from the gun line. Penacook and the western fringes lie partly sheltered behind terrain. The range rings from the East battery mark the tactical distances: inside a few kilometers, nothing on the west bank is truly out of reach of indirect fire.",
+      "stats": [
+        { "label": "Heaviest exposure", "value": "Downtown + river wards" },
+        { "label": "Most sheltered", "value": "Western fringes" },
+        { "label": "Battery", "value": "NHARNG armory (East)" }
+      ],
+      "layers": [
+        "city",
+        "river",
+        "front_line",
+        "neighborhoods",
+        "artillery_rings",
+        "himars",
+        "tanks"
+      ],
+      "camera": { "center": [-71.535, 43.212], "zoom": 11, "pitch": 0, "bearing": 0 }
+    },
+    {
+      "id": "allies",
+      "title": "The Allied Towns",
+      "subtitle": "Which neighbors fall in with which bank",
+      "body": "No city fights alone. Concord's bordering towns each fall to the bank they share the most boundary with — and where a town barely touches the line, to the nearer side. West rallies Bow, Hopkinton, Webster, Boscawen, and Dunbarton: the commuter and farm towns of the river's west side. East draws Pembroke, Chichester, Loudon, Canterbury, Epsom, and Allenstown, the towns beyond the Heights and the Soucook. The alliance is lopsided — the West's bloc holds more land and people, but the East's ring wraps the high country the guns fire from and the eastern roads into town.",
+      "stats": [
+        { "label": "West-allied", "value": "Bow, Hopkinton, Webster, Boscawen, Dunbarton" },
+        { "label": "East-allied", "value": "Pembroke, Chichester, Loudon, Canterbury, Epsom, Allenstown" },
+        { "label": "Rule", "value": "Longest shared border" }
+      ],
+      "layers": [
+        "city",
+        "river",
+        "front_line",
+        "allied_towns",
+        "territory_west",
+        "territory_east"
+      ],
+      "camera": { "center": [-71.535, 43.215], "zoom": 10, "pitch": 0, "bearing": 0 }
+    },
+    {
       "id": "lifelines",
       "title": "The Lifelines",
       "subtitle": "Water, power, and gas \u2014 almost all of it West",

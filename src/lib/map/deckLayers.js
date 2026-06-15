@@ -6,6 +6,12 @@ const ARC_COLORS = {
   armor: [110, 44, 0]
 };
 
+// polygon colour-by palettes (allied_towns by side, neighborhoods by exposure)
+const POLY_PALETTES = {
+  side: { West: '#2f5d80', East: '#9e3b2e' },
+  exposure: { heavy: '#9e3b2e', partial: '#d68a3c', sheltered: '#5f8f5a' }
+};
+
 // strategic-POI category palette (city_pois layer)
 const CATEGORY_COLORS = {
   medical: '#c0392b', education: '#2e86c1', government: '#6e2c00', power: '#f1c40f',
@@ -123,7 +129,13 @@ export function buildDeckLayers(visible, geo, specs, t = 0) {
         getLineColor: spec.style.categoryColors ? [42, 35, 23, 220] : lineColor,
         getFillColor: spec.style.categoryColors
           ? (f) => hexToRgba(CATEGORY_COLORS[f.properties?.category] || '#3a2f1d', 1)
-          : pointFill || polyFill || [0, 0, 0, 0],
+          : spec.style.colorBy
+            ? (f) =>
+                hexToRgba(
+                  POLY_PALETTES[spec.style.colorBy]?.[f.properties?.[spec.style.colorBy]] || '#888888',
+                  spec.style.fillOpacity ?? 0.4
+                )
+            : pointFill || polyFill || [0, 0, 0, 0],
         getPointRadius: spec.style.pointRadius ?? 6,
         pointRadiusUnits: 'pixels'
       })

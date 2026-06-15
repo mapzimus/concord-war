@@ -489,6 +489,86 @@
       },
       "visible_default": false,
       "note": "1,273 downtown footprints extruded to their real lidar-derived height \u2014 tilt with the 3D button to see the city rise."
+    },
+    {
+      "id": "forest",
+      "group": "Land cover",
+      "label": "Forest / woodland",
+      "geojson": "forest.geojson",
+      "source_url": "OpenStreetMap natural=wood / landuse=forest",
+      "style": { "fill": "#5f7350", "fillOpacity": 0.4, "line": "#4f6044", "lineWidth": 0.3 },
+      "visible_default": false,
+      "note": "Tree cover \u2014 concealment and cover that shapes movement and observation."
+    },
+    {
+      "id": "water_bodies",
+      "group": "Land cover",
+      "label": "Lakes, ponds & reservoirs",
+      "geojson": "water_bodies.geojson",
+      "source_url": "City of Concord GIS / USGS NHD",
+      "style": { "fill": "#3f6f8c", "fillOpacity": 0.75, "line": "#2c5066", "lineWidth": 0.4 },
+      "visible_default": false,
+      "note": ""
+    },
+    {
+      "id": "streams",
+      "group": "Land cover",
+      "label": "Streams & brooks",
+      "geojson": "streams.geojson",
+      "source_url": "USGS NHD flowlines",
+      "style": { "line": "#4a7e96", "lineWidth": 0.6 },
+      "visible_default": false,
+      "note": ""
+    },
+    {
+      "id": "roads_major",
+      "group": "Transport",
+      "label": "Major roads (arterials)",
+      "geojson": "roads_major.geojson",
+      "source_url": "OpenStreetMap (motorway/trunk/primary/secondary)",
+      "style": { "line": "#6e5a38", "lineWidth": 1.2 },
+      "visible_default": false,
+      "note": "The arterial network \u2014 how force and supply actually move."
+    },
+    {
+      "id": "roads_minor",
+      "group": "Transport",
+      "label": "Local road network",
+      "geojson": "roads_minor.geojson",
+      "source_url": "OpenStreetMap (tertiary/residential/unclassified)",
+      "style": { "line": "#998663", "lineWidth": 0.4 },
+      "visible_default": false,
+      "note": "1,845 local streets \u2014 the urban fabric of both banks."
+    },
+    {
+      "id": "allied_towns",
+      "group": "Strategic",
+      "label": "Allied towns (by bank)",
+      "geojson": "allied_towns.geojson",
+      "source_url": "derived: longest shared border with West vs East (proximity tiebreak)",
+      "style": { "colorBy": "side", "fillOpacity": 0.3, "line": "#3a2f1d", "lineWidth": 1 },
+      "visible_default": false,
+      "note": "Each bordering town allies with the bank it shares the most boundary with: West = Bow, Hopkinton, Webster, Boscawen, Dunbarton; East = Pembroke, Chichester, Loudon, Canterbury, Epsom, Allenstown."
+    },
+    {
+      "id": "neighborhoods",
+      "group": "Tactical",
+      "label": "Neighborhoods under fire",
+      "geojson": "neighborhoods.geojson",
+      "source_url": "derived: Voronoi neighborhoods \u00d7 East viewshed exposure",
+      "style": { "colorBy": "exposure", "fillOpacity": 0.5, "line": "#3a2f1d", "lineWidth": 0.6 },
+      "visible_default": false,
+      "note": "Named neighborhoods shaded by how much of each lies inside the East's line-of-sight fire: heavy / partial / sheltered."
+    },
+    {
+      "id": "artillery_rings",
+      "group": "Tactical",
+      "label": "Artillery range rings (East battery)",
+      "geojson": "artillery_rings.geojson",
+      "source_url": "derived: 2/4/6/8 km from the NHARNG armory firing position",
+      "style": { "line": "#7a1f14", "lineWidth": 1.1 },
+      "visible_default": false,
+      "note": "Concentric range bands from the East's gun line."
     }
   ]
 }

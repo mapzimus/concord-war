@@ -27,6 +27,9 @@ ARC <- c(bombardment = "#b5402f", air_assault = "#356c92", armor = "#6e4a1f")
 CAT_COL <- c(medical = "#c0392b", education = "#2e86c1", government = "#6e2c00", power = "#f1c40f",
              water = "#1f618d", transport = "#196f3d", logistics = "#b9770e", public_safety = "#884ea0",
              worship = "#7d6608", comms = "#117a65", fuel = "#d35400", civic = "#5d6d7e", military = "#4a1c1c")
+SIDE_COL <- c(West = WEST, East = EAST)
+EXP_COL  <- c(heavy = "#9e3b2e", partial = "#d68a3c", sheltered = "#5f8f5a")
+FOREST <- "#5f7350"
 
 fam_disp <- "serif"; fam_body <- "serif"
 if (ok_show) try({
@@ -62,9 +65,12 @@ load_geo <- function(id) {
   assign(id, g, geo_cache); g
 }
 city  <- load_geo("city"); river <- load_geo("river"); front <- load_geo("front_line")
+forest <- load_geo("forest"); wbodies <- load_geo("water_bodies")
+streams <- load_geo("streams"); roads_maj <- load_geo("roads_major")
 
-HALFLAT <- c("11" = 0.066, "12" = 0.040, "13" = 0.024)
-SKIP_CTX <- c("city", "river", "front_line", "terrain_3d")
+HALFLAT <- c("10" = 0.125, "11" = 0.066, "12" = 0.040, "13" = 0.024)
+SKIP_CTX <- c("city", "river", "front_line", "terrain_3d",
+              "forest", "water_bodies", "streams", "roads_major")
 
 # returns list(geoms = <ggplot layers>, labels = data.frame(x,y,text,col))
 draw_layer <- function(lid, gdf) {
@@ -72,6 +78,30 @@ draw_layer <- function(lid, gdf) {
   st <- style_by[[lid]]; if (is.null(st)) st <- list()
   gtype <- as.character(sf::st_geometry_type(gdf, by_geometry = FALSE))
   geoms <- list(); labs <- NULL
+
+  # --- special-cased layers ---
+  if (lid == "forest") {
+    return(list(geoms = list(geom_sf(data = gdf, fill = FOREST, colour = NA, alpha = 0.4)), labels = NULL))
+  }
+  if (lid == "water_bodies") {
+    return(list(geoms = list(geom_sf(data = gdf, fill = "#3f6f8c", colour = "#2c5066",
+                                     linewidth = 0.2, alpha = 0.85)), labels = NULL))
+  }
+  if (lid %in% c("allied_towns", "neighborhoods")) {
+    keycol <- if (lid == "allied_towns") "side" else "exposure"
+    pal <- if (lid == "allied_towns") SIDE_COL else EXP_COL
+    cols <- unname(pal[as.character(gdf[[keycol]])]); cols[is.na(cols)] <- "#888888"
+    a <- if (lid == "allied_towns") 0.3 else 0.5
+    geoms <- list(geom_sf(data = gdf, fill = cols, colour = INK, linewidth = 0.4, alpha = a))
+    nm <- intersect(c("name", "Name"), names(gdf))
+    if (length(nm)) {
+      cen <- suppressWarnings(sf::st_coordinates(sf::st_point_on_surface(gdf)))
+      labs <- data.frame(x = cen[, 1], y = cen[, 2], text = as.character(gdf[[nm[1]]]),
+                         col = if (lid == "allied_towns") cols else INK, stringsAsFactors = FALSE)
+    }
+    return(list(geoms = geoms, labels = labs))
+  }
+
   if (grepl("POLY", gtype)) {
     fill <- switch(lid, territory_west = WEST, territory_east = EAST, territory_contested = CONTEST,
                    if (!is.null(st$fill)) st$fill else NA)
@@ -149,6 +179,10 @@ for (idx in seq_along(chapters)) {
     geom_sf(data = city, fill = NA, colour = INK, linewidth = 0.7)
 
   labels <- NULL
+  if (!is.null(forest)) p <- p + draw_layer("forest", forest)$geoms
+  if (!is.null(wbodies)) p <- p + draw_layer("water_bodies", wbodies)$geoms
+  if (!is.null(streams)) p <- p + draw_layer("streams", streams)$geoms
+  if (!is.null(roads_maj)) p <- p + draw_layer("roads_major", roads_maj)$geoms
   if (!is.null(river)) p <- p + draw_layer("river", river)$geoms
   for (lid in unlist(ch$layers)) {
     if (lid %in% SKIP_CTX) next
