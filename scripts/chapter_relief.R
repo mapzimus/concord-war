@@ -45,6 +45,7 @@ manifest <- fromJSON(file.path(DATA, "manifest.json"), simplifyVector = FALSE)$l
 style_by <- setNames(lapply(manifest, function(l) l$style), sapply(manifest, function(l) l$id))
 geojson_by <- setNames(sapply(manifest, function(l) l$geojson), sapply(manifest, function(l) l$id))
 chapters <- fromJSON(file.path(DATA, "chapters.json"), simplifyVector = FALSE)$chapters
+render_only <- commandArgs(trailingOnly = TRUE)  # optional: render only these chapter ids
 
 # ---- relief (computed once on the full DEM) --------------------------------
 dem <- rast(DEM); crs(dem) <- paste0("EPSG:", CRSc)
@@ -157,12 +158,24 @@ draw_layer <- function(lid, gdf) {
 # ---- render each chapter ---------------------------------------------------
 for (idx in seq_along(chapters)) {
   ch <- chapters[[idx]]; cid <- ch$id
+  if (length(render_only) && !(cid %in% render_only)) next
   cam <- ch$camera; z <- as.character(cam$zoom)
   hl <- if (!is.null(HALFLAT[[z]])) HALFLAT[[z]] else 0.066
   hlon <- hl * 1.78
   c1 <- TF(cam$center[[1]] - hlon, cam$center[[2]] - hl)
   c2 <- TF(cam$center[[1]] + hlon, cam$center[[2]] + hl)
   minx <- min(c1[1], c2[1]); maxx <- max(c1[1], c2[1]); miny <- min(c1[2], c2[2]); maxy <- max(c1[2], c2[2])
+
+  # Regional alliance map: frame to all allied towns (they reach well past the city/DEM).
+  if ("allied_towns" %in% unlist(ch$layers)) {
+    at_g <- load_geo("allied_towns")
+    if (!is.null(at_g)) {
+      bb <- st_bbox(at_g)
+      px <- as.numeric(bb["xmax"] - bb["xmin"]) * 0.04; py <- as.numeric(bb["ymax"] - bb["ymin"]) * 0.04
+      minx <- as.numeric(bb["xmin"]) - px; maxx <- as.numeric(bb["xmax"]) + px
+      miny <- as.numeric(bb["ymin"]) - py; maxy <- as.numeric(bb["ymax"]) + py
+    }
+  }
 
   hsub <- hdf_all[hdf_all$x >= minx & hdf_all$x <= maxx & hdf_all$y >= miny & hdf_all$y <= maxy, ]
   esub <- edf_all[edf_all$x >= minx & edf_all$x <= maxx & edf_all$y >= miny & edf_all$y <= maxy, ]

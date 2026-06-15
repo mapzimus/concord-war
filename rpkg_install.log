@@ -1,0 +1,72 @@
+﻿Rscript.exe : Installing packages into 'C:/Users/Calen/AppData/Local/R/win-library/4.5'
+At line:2 char:1
++ & $rs -e "install.packages(c('rayshader','rgl','rayrender','rayimage' ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Installing pack...in-library/4.5':String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+(as 'lib' is unspecified)
+
+  There is a binary version available (and will be installed) but the
+  source version is later:
+         binary source
+rayimage 0.15.1 0.26.1
+
+also installing the dependencies 'iterators', 'operator.tools', 'doParallel', 'foreach', 'terrainmeshr', 'rayvertex', 
+'RcppArmadillo', 'decido', 'RcppThread', 'spacefillr', 'tiff', 'showtextdb', 'Formula', 'formula.tools'
+
+trying URL 'https://cloud.r-project.org/bin/windows/contrib/4.5/iterators_1.0.14.zip'
+trying URL 'https://cloud.r-project.org/bin/windows/contrib/4.5/operator.tools_1.6.3.1.zip'
+trying URL 'https://cloud.r-project.org/bin/windows/contrib/4.5/doParallel_1.0.17.zip'
+trying URL 'https://cloud.r-project.org/bin/windows/contrib/4.5/foreach_1.5.2.zip'
+trying URL 'https://cloud.r-project.org/bin/windows/contrib/4.5/terrainmeshr_1.0.1.zip'
+trying URL 'https://cloud.r-project.org/bin/windows/contrib/4.5/rayvertex_0.12.0.zip'
+trying URL 'https://cloud.r-project.org/bin/windows/contrib/4.5/RcppArmadillo_15.2.7-1.zip'
+trying URL 'https://cloud.r-project.org/bin/windows/contrib/4.5/decido_0.4.0.zip'
+trying URL 'https://cloud.r-project.org/bin/windows/contrib/4.5/RcppThread_2.3.0.zip'
+trying URL 'https://cloud.r-project.org/bin/windows/contrib/4.5/spacefillr_0.4.0.zip'
+trying URL 'https://cloud.r-project.org/bin/windows/contrib/4.5/tiff_0.1-12.zip'
+trying URL 'https://cloud.r-project.org/bin/windows/contrib/4.5/showtextdb_3.0.zip'
+trying URL 'https://cloud.r-project.org/bin/windows/contrib/4.5/Formula_1.2-5.zip'
+trying URL 'https://cloud.r-project.org/bin/windows/contrib/4.5/formula.tools_1.7.1.zip'
+trying URL 'https://cloud.r-project.org/bin/windows/contrib/4.5/rayshader_0.37.3.zip'
+trying URL 'https://cloud.r-project.org/bin/windows/contrib/4.5/rgl_1.3.36.zip'
+trying URL 'https://cloud.r-project.org/bin/windows/contrib/4.5/rayrender_0.38.10.zip'
+trying URL 'https://cloud.r-project.org/bin/windows/contrib/4.5/rayimage_0.15.1.zip'
+trying URL 'https://cloud.r-project.org/bin/windows/contrib/4.5/showtext_0.9-8.zip'
+trying URL 'https://cloud.r-project.org/bin/windows/contrib/4.5/sysfonts_0.8.9.zip'
+trying URL 'https://cloud.r-project.org/bin/windows/contrib/4.5/ggfx_1.0.3.zip'
+trying URL 'https://cloud.r-project.org/bin/windows/contrib/4.5/ggrepel_0.9.8.zip'
+trying URL 'https://cloud.r-project.org/bin/windows/contrib/4.5/geomtextpath_0.2.0.zip'
+trying URL 'https://cloud.r-project.org/bin/windows/contrib/4.5/cowplot_1.2.0.zip'
+trying URL 'https://cloud.r-project.org/bin/windows/contrib/4.5/smoothr_1.3.0.zip'
+trying URL 'https://cloud.r-project.org/bin/windows/contrib/4.5/metR_0.18.3.zip'
+package 'iterators' successfully unpacked and MD5 sums checked
+package 'operator.tools' successfully unpacked and MD5 sums checked
+package 'doParallel' successfully unpacked and MD5 sums checked
+package 'foreach' successfully unpacked and MD5 sums checked
+package 'terrainmeshr' successfully unpacked and MD5 sums checked
+package 'rayvertex' successfully unpacked and MD5 sums checked
+package 'RcppArmadillo' successfully unpacked and MD5 sums checked
+package 'decido' successfully unpacked and MD5 sums checked
+package 'RcppThread' successfully unpacked and MD5 sums checked
+package 'spacefillr' successfully unpacked and MD5 sums checked
+package 'tiff' successfully unpacked and MD5 sums checked
+package 'showtextdb' successfully unpacked and MD5 sums checked
+package 'Formula' successfully unpacked and MD5 sums checked
+package 'formula.tools' successfully unpacked and MD5 sums checked
+package 'rayshader' successfully unpacked and MD5 sums checked
+package 'rgl' successfully unpacked and MD5 sums checked
+package 'rayrender' successfully unpacked and MD5 sums checked
+package 'rayimage' successfully unpacked and MD5 sums checked
+package 'showtext' successfully unpacked and MD5 sums checked
+package 'sysfonts' successfully unpacked and MD5 sums checked
+package 'ggfx' successfully unpacked and MD5 sums checked
+package 'ggrepel' successfully unpacked and MD5 sums checked
+package 'geomtextpath' successfully unpacked and MD5 sums checked
+package 'cowplot' successfully unpacked and MD5 sums checked
+package 'smoothr' successfully unpacked and MD5 sums checked
+package 'metR' successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+	C:\Users\Calen\AppData\Local\Temp\RtmpMv1LU3\downloaded_packages
